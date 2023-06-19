@@ -1,0 +1,108 @@
+---
+import MenuLink from "../components/menuLink.astro";
+
+type Props = {
+  title?: string;
+};
+
+const { title = "Unicorn Cat Consulting" } = Astro.props as Props;
+---
+
+<!DOCTYPE html>
+<html lang="en-US" class="h-full scroll-smooth bg-white antialiased">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+
+    <title>{title}</title>
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="public/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="public/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="public/favicon-16x16.png"
+    />
+    <link rel="manifest" href="public/site.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="w-full min-h-full text-gray-800 bg-gray-100">
+    <header
+      class="pt-8 text-white bg-gradient-to-br from-[#100151] to-[#0d3f8f] p-12"
+    >
+      <div
+        class="flex justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
+      >
+        <h1
+          class="font-sans text-2xl font-semibold text-white leading-tight tracking-tight"
+        >
+          Unicorn Cat Consulting
+        </h1>
+
+        <div class="flex gap-6 justify-between items-center text-white text-lg">
+          <MenuLink href="">Home</MenuLink>
+          <MenuLink href="">Services</MenuLink>
+          <a
+            href=""
+            class="rounded-lg px-4 py-2 bg-[#2b73e4] text-white font-semibold opacity-80 hover:opacity-100"
+            >Contact us</a
+          >
+        </div>
+      </div>
+
+      <slot />
+    </header>
+
+    <main class="h-96 mt-56 text-lg">
+      <div
+        class="flex flex-col justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
+      >
+        <h2
+          class="font-sans text-4xl font-semibold text-slate-800 leading-tight tracking-tight"
+        >
+          Services
+        </h2>
+
+        <p>Services we offer here.</p>
+      </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-300 px-12 py-24">
+      <div
+        class="flex justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
+      >
+        <div>
+          <h2
+            class="font-sans text-xl font-semibold text-white leading-tight tracking-tight mb-2"
+          >
+            Unicorn Cat Consulting
+          </h2>
+
+          <div>© 2023 All rights reserved.</div>
+        </div>
+
+        <div class="flex flex-col">
+          <a href="emailto:alex@unicorncatconsulting.com"
+            >alex@unicorncatconsulting.com</a
+          >
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
