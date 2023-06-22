@@ -4,11 +4,12 @@ import BaseLayout from "../layouts/base.astro";
 
 <BaseLayout>
   <div
+    slot="header-content"
     class="flex justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto mt-28 pb-12 relative"
   >
     <div class="animate-fadeIn">
       <h2
-        class="text-6xl font-bold text-white leading-tight tracking-tight max-w-2xl mb-2"
+        class="text-3xl md:text-6xl font-bold text-white leading-tight tracking-tight max-w-2xl mb-2"
       >
         Start your digital transformation today
       </h2>
@@ -19,10 +20,22 @@ import BaseLayout from "../layouts/base.astro";
 
     <img
       src="/unicorn-cat.png"
-      class="rounded-lg drop-shadow max-h-96 absolute top-2 right-0"
+      class="rounded-lg drop-shadow max-h-96 absolute top-2 right-0 hidden lg:block"
       height="384px"
       width="384px"
     />
   </div>
-  <main class=""></main>
+  <div class="lg:mt-56" slot="content">
+    <div
+      class="flex flex-col justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
+    >
+      <h2
+        class="font-sans text-4xl font-semibold text-slate-800 leading-tight tracking-tight"
+      >
+        Services
+      </h2>
+
+      <p>Services we offer here.</p>
+    </div>
+  </div>
 </BaseLayout>

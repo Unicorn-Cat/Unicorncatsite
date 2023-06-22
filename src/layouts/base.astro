@@ -49,60 +49,137 @@ const { title = "Unicorn Cat Consulting" } = Astro.props as Props;
       <div
         class="flex justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
       >
-        <h1
-          class="font-sans text-2xl font-semibold text-white leading-tight tracking-tight"
-        >
-          Unicorn Cat Consulting
-        </h1>
-
-        <div class="flex gap-6 justify-between items-center text-white text-lg">
-          <MenuLink href="">Home</MenuLink>
-          <MenuLink href="">Services</MenuLink>
-          <a
-            href=""
-            class="rounded-lg px-4 py-2 bg-[#2b73e4] text-white font-semibold opacity-80 hover:opacity-100"
-            >Contact us</a
+        <a href="/">
+          <h1
+            class="font-sans text-2xl font-semibold text-white leading-tight tracking-tight"
           >
+            UnicornCat Consulting
+          </h1></a
+        >
+
+        <div class="relative flex gap-6 justify-between text-white text-lg">
+          <div class="block lg:hidden">
+            <button class="hamburger z-50 relative"><div></div></button>
+          </div>
+
+          <div
+            class="menu gap-6 justify-between items-center hidden lg:flex lg:static fixed right-0 top-0 bottom-0"
+          >
+            <MenuLink href="services">Services</MenuLink>
+            <MenuLink href="resources">Resources</MenuLink>
+            <MenuLink href="about">About Us</MenuLink>
+            <a
+              href=""
+              class="rounded-lg px-4 py-2 bg-[#2b73e4] text-white font-semibold opacity-80 hover:opacity-100"
+              >Contact us</a
+            >
+          </div>
         </div>
       </div>
 
-      <slot />
+      <slot name="header-content" />
     </header>
 
-    <main class="h-96 mt-56 text-lg">
-      <div
-        class="flex flex-col justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
-      >
-        <h2
-          class="font-sans text-4xl font-semibold text-slate-800 leading-tight tracking-tight"
-        >
-          Services
-        </h2>
-
-        <p>Services we offer here.</p>
-      </div>
+    <main class="h-96 mt-12 text-lg">
+      <slot name="content" />
     </main>
 
     <footer class="bg-slate-900 text-slate-300 px-12 py-24">
       <div
         class="flex justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
       >
-        <div>
-          <h2
-            class="font-sans text-xl font-semibold text-white leading-tight tracking-tight mb-2"
-          >
-            Unicorn Cat Consulting
-          </h2>
+        <slot name="footer-content">
+          <div>
+            <h2
+              class="font-sans text-xl font-semibold text-white leading-tight tracking-tight mb-2"
+            >
+              Unicorn Cat Consulting
+            </h2>
 
-          <div>© 2023 All rights reserved.</div>
-        </div>
+            <div>© 2023 All rights reserved.</div>
+          </div>
 
-        <div class="flex flex-col">
-          <a href="emailto:alex@unicorncatconsulting.com"
-            >alex@unicorncatconsulting.com</a
-          >
-        </div>
+          <div class="flex flex-col">
+            <a href="emailto:alex@unicorncatconsulting.com"
+              >alex@unicorncatconsulting.com</a
+            >
+          </div>
+        </slot>
       </div>
     </footer>
   </body>
 </html>
+
+<script>
+  const toggler = document.querySelector(".hamburger");
+  const menu = document.querySelector(".menu");
+
+  toggler?.addEventListener("click", () => {
+    toggler?.classList.toggle("active");
+    menu?.classList.toggle("hidden");
+    menu?.classList.toggle("mobile-menu");
+  });
+</script>
+
+<style>
+  .hamburger {
+    height: 40px;
+    width: 60px;
+    padding: 0.2rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hamburger > div {
+    position: relative;
+    top: 0;
+    right: 0;
+    background: white;
+    height: 2px;
+    width: 60%;
+    transition: all 0.4s ease;
+  }
+  .hamburger > div::before,
+  .hamburger > div::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: 0;
+    background: white;
+    width: 100%;
+    height: 2px;
+    transition: all 0.4s ease;
+  }
+
+  .hamburger > div::after {
+    top: 10px;
+  }
+
+  .active.hamburger > div {
+    background: rgba(0, 0, 0, 0);
+  }
+
+  .active.hamburger > div::before {
+    top: 0;
+    transform: rotate(45deg);
+    background: #333;
+  }
+
+  .active.hamburger > div::after {
+    top: 0;
+    transform: rotate(135deg);
+    background: #333;
+  }
+
+  .mobile-menu {
+    display: flex;
+    background: rgb(243 244 246 / var(--tw-bg-opacity));
+    padding: 8rem 4rem 1rem 4rem;
+    color: #333;
+    flex-direction: column;
+    justify-content: flex-start !important;
+    z-index: 49;
+  }
+</style>
