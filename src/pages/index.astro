@@ -1,4 +1,5 @@
 ---
+import Card from "../components/card.astro";
 import BaseLayout from "../layouts/base.astro";
 ---
 
@@ -13,8 +14,8 @@ import BaseLayout from "../layouts/base.astro";
       >
         Start your digital transformation today
       </h2>
-      <p class="text-white opacity-75 text-lg">
-        Generative AI has revolutionized the way we think about work.
+      <p class="text-white opacity-75 text-lg max-w-lg">
+        We use emerging tech to redesign business processes, significantly reduce costs, improve quality, and efficiency.
       </p>
     </div>
 
@@ -25,17 +26,22 @@ import BaseLayout from "../layouts/base.astro";
       width="384px"
     />
   </div>
+
   <div class="lg:mt-56" slot="content">
     <div
       class="flex flex-col justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
     >
       <h2
-        class="font-sans text-4xl font-semibold text-slate-800 leading-tight tracking-tight"
+        class="font-sans text-4xl font-semibold text-slate-800 leading-tight tracking-tight mb-4"
       >
         Services
       </h2>
 
-      <p>Services we offer here.</p>
+      <div class="flex gap-4">
+        <Card header="Generative AI" content="test" />
+        <Card header="Generative AI" content="test" />
+        <Card header="Generative AI" content="test" />
+      </div>
     </div>
   </div>
 </BaseLayout>
