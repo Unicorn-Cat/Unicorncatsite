@@ -1,0 +1,56 @@
+---
+import BaseLayout from "../layouts/base.astro";
+import { PortableText as PortableTextInternal } from 'astro-portabletext'
+import { useSanityClient } from "astro-sanity";
+
+export async function getStaticPaths() {
+  const posts = await useSanityClient().fetch(`*[_type == "pages"]`);
+  console.log(posts);
+
+  return posts.map(({ slug, title, content, cta }) => {
+    console.log(`${slug?.current ?? ""}`);
+    return {
+      params: { slug: slug?.current },
+      props: { title, content, cta },
+    };
+  });
+}
+
+const { slug } = Astro.params;
+const { title, content, cta } = Astro.props;
+---
+
+<BaseLayout>
+    {cta && (<div     class="flex justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto mt-28 pb-12 relative"
+    slot="header-content">    <div class="animate-fadeIn">
+        <h2
+          class="text-3xl md:text-6xl font-bold text-white leading-tight tracking-tight max-w-2xl mb-2"
+        >
+        {cta.cta_title}
+        </h2>
+        <p class="text-white opacity-75 text-lg max-w-lg">
+
+            <PortableTextInternal value={cta.cta_content}  />        
+            </p>
+      </div>
+  
+      <img
+        src="/unicorn-cat.png"
+        class="rounded-lg drop-shadow max-h-96 absolute top-2 right-0 hidden lg:block"
+        height="384px"
+        width="384px"
+      /></div>)}
+    <div class="" slot="content">
+      <div
+        class="flex flex-col justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
+      >
+        <h2
+          class="font-sans text-4xl font-semibold text-slate-800 leading-tight tracking-tight mb-4"
+        >
+          {title}
+        </h2>
+  
+       <PortableTextInternal value={content} />
+      </div>
+    </div>
+  </BaseLayout>

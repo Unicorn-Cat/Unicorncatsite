@@ -42,9 +42,9 @@ const { title = "Unicorn Cat Consulting" } = Astro.props as Props;
     />
   </head>
 
-  <body class="w-full min-h-full text-gray-800 bg-gray-100">
+  <body class="flex flex-col w-full min-h-full text-gray-800 bg-gray-100">
     <header
-      class="pt-8 text-white bg-gradient-to-br from-[#100151] to-[#0d3f8f] p-12"
+      class="h-22 pt-8 text-white bg-gradient-to-br from-[#100151] to-[#0d3f8f] p-12"
     >
       <div
         class="flex justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
@@ -67,7 +67,7 @@ const { title = "Unicorn Cat Consulting" } = Astro.props as Props;
           >
             <MenuLink href="services">Services</MenuLink>
             <MenuLink href="resources">Resources</MenuLink>
-            <MenuLink href="about">About Us</MenuLink>
+            <MenuLink href="about-us">About Us</MenuLink>
             <a
               href="mailto:alex@unicorncatconsulting.com"
               class="rounded-lg px-4 py-2 bg-[#2b73e4] text-white font-semibold opacity-80 hover:opacity-100"
@@ -80,11 +80,11 @@ const { title = "Unicorn Cat Consulting" } = Astro.props as Props;
       <slot name="header-content" />
     </header>
 
-    <main class="h-96 mt-12 text-lg">
+    <main class="flex-auto my-12 text-lg">
       <slot name="content" />
     </main>
 
-    <footer class="bg-slate-900 text-slate-300 px-12 py-24">
+    <footer class="h-44 bg-slate-900 text-slate-300 px-12 py-24">
       <div
         class="flex justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
       >
