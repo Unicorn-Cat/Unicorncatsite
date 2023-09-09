@@ -4,11 +4,9 @@ import { PortableText as PortableTextInternal } from 'astro-portabletext'
 import { useSanityClient } from "astro-sanity";
 
 export async function getStaticPaths() {
-  const posts = await useSanityClient().fetch(`*[_type == "pages"]`);
-  console.log(posts);
+  const pages = await useSanityClient().fetch(`*[_type == "pages"]`);
 
-  return posts.map(({ slug, title, content, cta }) => {
-    console.log(`${slug?.current ?? ""}`);
+  return pages.map(({ slug, title, content, cta }) => {
     return {
       params: { slug: slug?.current },
       props: { title, content, cta },
@@ -16,7 +14,6 @@ export async function getStaticPaths() {
   });
 }
 
-const { slug } = Astro.params;
 const { title, content, cta } = Astro.props;
 ---
 
@@ -28,10 +25,7 @@ const { title, content, cta } = Astro.props;
         >
         {cta.cta_title}
         </h2>
-        <p class="text-white opacity-75 text-lg max-w-lg">
-
-            <PortableTextInternal value={cta.cta_content}  />        
-            </p>
+            <PortableTextInternal value={cta.cta_content}  class="text-white opacity-75 text-lg max-w-lg" />        
       </div>
   
       <img
@@ -42,7 +36,7 @@ const { title, content, cta } = Astro.props;
       /></div>)}
     <div class="" slot="content">
       <div
-        class="flex flex-col justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
+        class="content flex flex-col justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
       >
         <h2
           class="font-sans text-4xl font-semibold text-slate-800 leading-tight tracking-tight mb-4"

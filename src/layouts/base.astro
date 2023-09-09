@@ -1,9 +1,18 @@
 ---
 import MenuLink from "../components/menuLink.astro";
+import { useSanityClient } from "astro-sanity";
 
 type Props = {
   title?: string;
 };
+
+const sanityPages = await useSanityClient().fetch(`*[_type == "pages"]`);
+const pages = sanityPages.map(({ title, slug }) => {
+  return {
+    title,
+    slug
+  };
+});
 
 const { title = "Unicorn Cat Consulting" } = Astro.props as Props;
 ---
@@ -40,6 +49,10 @@ const { title = "Unicorn Cat Consulting" } = Astro.props as Props;
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap"
       rel="stylesheet"
     />
+    <link
+    href="/main.css"
+    rel="stylesheet"
+  />
   </head>
 
   <body class="flex flex-col w-full min-h-full text-gray-800 bg-gray-100">
@@ -65,9 +78,8 @@ const { title = "Unicorn Cat Consulting" } = Astro.props as Props;
           <div
             class="menu gap-6 justify-between items-center hidden lg:flex lg:static fixed right-0 top-0 bottom-0"
           >
-            <MenuLink href="services">Services</MenuLink>
-            <MenuLink href="resources">Resources</MenuLink>
-            <MenuLink href="about-us">About Us</MenuLink>
+          {pages.map(({ title, slug }) => (
+          <MenuLink href={slug?.current ?? ""}>{title}</MenuLink>))}
             <a
               href="mailto:alex@unicorncatconsulting.com"
               class="rounded-lg px-4 py-2 bg-[#2b73e4] text-white font-semibold opacity-80 hover:opacity-100"
@@ -80,13 +92,13 @@ const { title = "Unicorn Cat Consulting" } = Astro.props as Props;
       <slot name="header-content" />
     </header>
 
-    <main class="flex-auto my-12 text-lg">
+    <main class="flex-auto my-12 px-12 md:px-0 text-lg">
       <slot name="content" />
     </main>
 
-    <footer class="h-44 bg-slate-900 text-slate-300 px-12 py-24">
+    <footer class="mt-32 bg-slate-900 text-slate-300 px-12 py-24">
       <div
-        class="flex justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
+        class="flex flex-col md:flex-row justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto"
       >
         <slot name="footer-content">
           <div>
