@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: ["DM Sans"],
+      serif: ["Crimson Pro"],
     },
     extend: {
       animation: {

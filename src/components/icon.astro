@@ -1,0 +1,12 @@
+---
+type Props = {
+  icon: string;
+};
+
+const { icon } = Astro.props as Props;
+const iconFile = await import(`../icons/${icon}.svg`);
+---
+
+<i>
+  <img src={iconFile.default.src} width={48} />
+</i>
