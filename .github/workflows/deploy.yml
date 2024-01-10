@@ -41,11 +41,15 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install, build, and upload your site
-        run: npm ci && npm run build
-
       - name: Set production base URL
         run: echo "BASE_URL=https://${{ env.DOMAIN }}/${{ github.event.repository.name }}/" >> $GITHUB_ENV
+
+      - name: Set base URL for preview if PR
+        if: github.ref != 'refs/heads/main'
+        run: echo "BASE_URL=https://${{ env.DOMAIN }}/${{ env.PR_PATH}}/" >> $GITHUB_ENV
+
+      - name: Install, build, and upload your site
+        run: npm ci && npm run build --base="${{BASE_URL}}"
 
       - name: Deploy if this is the `main` branch
         uses: peaceiris/actions-gh-pages@v3
@@ -54,10 +58,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           cname: ${{ env.DOMAIN }} # TODO you need to set this if you're using a custom domain. Otherwise you can remove it.
-
-      - name: Set base URL for preview if PR
-        if: github.ref != 'refs/heads/main'
-        run: echo "BASE_URL=https://${{ env.DOMAIN }}/${{ github.event.repository.name }}/${{ env.PR_PATH}}/" >> $GITHUB_ENV
 
       - name: Deploy to PR preview
         uses: peaceiris/actions-gh-pages@v3
