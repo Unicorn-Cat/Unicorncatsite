@@ -51,9 +51,6 @@ jobs:
       - name: Npm install
         run: npm ci
 
-      - name: Set Astro config
-        run: npm run astro config set build.assetsPrefix /${{env.BASE_URL}}
-
       - name: Build
         run: npm run build
 
