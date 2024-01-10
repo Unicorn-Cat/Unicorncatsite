@@ -1,14 +1,14 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 
-const BASE_URL = import.meta.env.BASE_URL || "/";
+const ASSET_PATH = import.meta.env.ASSET_PATH || "/";
 
-console.log(`----\nBASE_URL: ${BASE_URL}\n${JSON.stringify(import.meta.env)}\n----`);
+console.log(`----\nASSET_PATH: ${ASSET_PATH}\n${JSON.stringify(import.meta.env)}\n----`);
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind()],
   build: {
-    assetsPrefix: BASE_URL,
+    assetsPrefix: ASSET_PATH,
   },
 });
