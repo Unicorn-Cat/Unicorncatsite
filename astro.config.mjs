@@ -3,7 +3,7 @@ import tailwind from "@astrojs/tailwind";
 
 const BASE_URL = import.meta.env.BASE_URL || "/";
 
-console.log(`----\nBASE_URL: ${BASE_URL}\n----`);
+console.log(`----\nBASE_URL: ${BASE_URL}\n${JSON.stringify(import.meta.env)}\n----`);
 
 // https://astro.build/config
 export default defineConfig({
