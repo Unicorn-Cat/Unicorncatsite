@@ -52,7 +52,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: BASE_URL=${{ env.BASE_URL }} npm run build
+        run: export BASE_URL=${{ env.BASE_URL }} && npm run build
 
       - name: Deploy if this is the `main` branch
         uses: peaceiris/actions-gh-pages@v3
