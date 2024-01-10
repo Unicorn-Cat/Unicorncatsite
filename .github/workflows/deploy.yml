@@ -49,7 +49,7 @@ jobs:
         run: echo "BASE_URL=https://${{ env.DOMAIN }}/${{ env.PR_PATH}}/" >> $GITHUB_ENV
 
       - name: Install, build, and upload your site
-        run: npm ci && npm run build --base=${{env.BASE_URL}}
+        run: npm ci && npm run build --site=${{env.BASE_URL}}
 
       - name: Deploy if this is the `main` branch
         uses: peaceiris/actions-gh-pages@v3
