@@ -35,11 +35,12 @@ jobs:
           # you need to set this as an environment env if your repo or any submodules (e.g the theme) is private:
           # token: ${{ secrets.PRIVATE_REPO_TOKEN }}
 
-      - name: Use Bun
-        uses: oven-sh/setup-bun@v1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
       - name: Install, build, and upload your site
-        run: bun install && bun run build
+        run: npm ci && npm run build
 
       - name: Set production base URL
         run: echo "BASE_URL=https://${{ env.DOMAIN }}/${{ github.event.repository.name }}/" >> $GITHUB_ENV
