@@ -16,7 +16,7 @@ jobs:
       - name: Comment on PR
         uses: hasura/comment-progress@v2.2.0
         if: github.ref != 'refs/heads/main'
-        permissions: write
+        permissions: write-all
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
