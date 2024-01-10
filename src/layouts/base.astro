@@ -16,6 +16,9 @@ const { title = "Unicorn Cat Consulting" } = Astro.props as Props;
     <meta name="viewport" content="width=device-width" />
 
     <title>{title}</title>
+
+    <base href={Astro.site?.host || "/"} target="_blank" />
+
     <link rel="apple-touch-icon" sizes="180x180" href="public/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="public/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="public/favicon-16x16.png" />
@@ -53,8 +56,8 @@ const { title = "Unicorn Cat Consulting" } = Astro.props as Props;
           <div
             class="menu gap-6 justify-between items-center hidden lg:flex lg:static fixed right-0 top-0 bottom-0"
           >
-            <MenuLink href="/resources">Resources</MenuLink>
-            <MenuLink href="/about-us">About Us</MenuLink>
+            <MenuLink href="resources">Resources</MenuLink>
+            <MenuLink href="about-us">About Us</MenuLink>
             <a
               href="mailto:alex@unicorncatconsulting.com"
               class="rounded-lg px-4 py-2 bg-[#2b73e4] text-white font-semibold opacity-80 hover:opacity-100"
