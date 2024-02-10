@@ -15,12 +15,14 @@ At Unicorncat Consulting, we're not just consultants; we're your partners in rei
 </p> </div> </div> </main> <footer class="mt-32 bg-[#222] text-gray-200 px-12 py-24" data-astro-cid-tnnyocjb> <div class="flex flex-col md:flex-row justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto" data-astro-cid-tnnyocjb>  <div data-astro-cid-tnnyocjb> <h2 class="text-white font-sans text-xl font-semibold text-whiteleading-tight tracking-tight mb-2" data-astro-cid-tnnyocjb>
 Unicorncat Consulting
 </h2> <div data-astro-cid-tnnyocjb>© 2024 All rights reserved.</div> </div> <div class="flex flex-col mt-8 md:mt-0" data-astro-cid-tnnyocjb> <a class="flex items-center opacity-75 hover:opacity-100 transition" href="https://www.linkedin.com/company/unicorncat-consulting" data-astro-cid-tnnyocjb><i class="inline-block w-5 mr-2 invert" data-astro-cid-tnnyocjb> <img src="/_assets/linkedin.KRoFVOMw.svg" width="48"> </i> LinkedIn</a> <a class="flex items-center opacity-75 hover:opacity-100 transition" href="emailto:alex@unicorncatconsulting.com" data-astro-cid-tnnyocjb><i class="inline-block w-5 mr-2 invert" data-astro-cid-tnnyocjb> <img src="/_assets/mail.cWSqB4MG.svg" width="48"> </i> alex@unicorncatconsulting.com</a> </div>  </div> </footer> <script>
-      const toggler = document.querySelector(".hamburger");
-      const menu = document.querySelector(".menu");
+      window.onload = function () {
+        const toggler = document.querySelector(".hamburger");
+        const menu = document.querySelector(".menu");
 
-      toggler?.addEventListener("click", () => {
-        toggler?.classList.toggle("active");
-        menu?.classList.toggle("hidden");
-        menu?.classList.toggle("mobile-menu");
-      });
+        toggler?.addEventListener("click", () => {
+          toggler?.classList.toggle("active");
+          menu?.classList.toggle("hidden");
+          menu?.classList.toggle("mobile-menu");
+        });
+      };
     </script>  </body> </html>
