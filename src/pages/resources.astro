@@ -6,13 +6,53 @@ import Card from "../components/card.astro";
 <BaseLayout>
   <div class="" slot="content">
     <div class="content flex flex-col justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto">
-      <a href="/sdfsdf">asdasd</a>
-      <!-- PUT LINKS HERE //-->
+      <h2
+        class="font-sans text-4xl font-bold text-slate-800 leading-tight tracking-tight font-serif">
+        Resources
+      </h2>
+      <p>Useful links and resources to jump-start your AI journey.</p>
 
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+        <Card>
+          <h3 slot="header">
+            <a class="pointer hover:underline" href="https://www.oneusefulthing.org/"
+              >Ethan Mollick's One Useful Thing</a
+            >
+          </h3>
+          <p>
+            Read about the future of practical AI, business, and education from A Wharton Business
+            School professor and pioneer in practical AI.
+          </p></Card
+        >
 
+        <Card>
+          <h3 slot="header">
+            <a class="pointer hover:underline" href="https://github.com/f/awesome-chatgpt-prompts"
+              >GitHub Prompt Library</a
+            >
+          </h3>
+          <p>Library of prompts to help you with almost every task you can think of.</p>
+        </Card>
 
+        <Card>
+          <h3 slot="header">
+            <a class="pointer hover:underline" href="https://pureinfotech.com/use-bing-ai-chatgpt/"
+              >Getting Started with Bing AI (Copilot)</a
+            >
+          </h3>
+          <p>Register for Bing and start your AI journey today!</p>
+        </Card>
 
-
+        <Card>
+          <h3 class="pointer hover:underline" slot="header">
+            <a href="https://www.zdnet.com/article/how-to-use-chatgpt/">How to use ChatGPT</a>
+          </h3>
+          <p>
+            If you want to use the most popular AI chatbot available, we'll walk you through how to
+            get started with ChatGPT and get the most out of it.
+          </p></Card
+        >
+      </div>
     </div>
   </div>
 </BaseLayout>
