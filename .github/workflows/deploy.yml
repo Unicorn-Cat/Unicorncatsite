@@ -13,7 +13,7 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
     env:
-      PR_PATH: pull/${{github.event.number}}
+      PR_PATH: test/${{github.event.pull_request.title}}
     steps:
       - name: Comment on PR
         uses: hasura/comment-progress@v2.2.0
