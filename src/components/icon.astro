@@ -1,12 +1,13 @@
 ---
 type Props = {
   icon: string;
+  class?: string;
 };
 
-const { icon } = Astro.props as Props;
+const { icon, ...rest } = Astro.props as Props;
 const iconFile = await import(`../icons/${icon}.svg`);
 ---
 
-<i>
+<i {...rest}>
   <img src={iconFile.default.src} width={48} />
 </i>

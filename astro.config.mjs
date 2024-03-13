@@ -8,6 +8,6 @@ export default defineConfig({
   integrations: [tailwind()],
   build: {
     assets: "_assets",
-    assetsPrefix: ASSET_PATH,
+    assetsPrefix: "/",
   },
 });

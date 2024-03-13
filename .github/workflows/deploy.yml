@@ -4,7 +4,7 @@ name: github pages
 on:
   push:
     branches:
-      - main # deploy main. If your branch is `master`, you'll have to replace that throughout this file.
+      - main
   pull_request: # This will publish a site preview on every pull request, and also run the build command to test if the site is broken.
 
 permissions: write-all
@@ -26,23 +26,19 @@ jobs:
           message: "Starting deployment of preview ⏳..."
 
       - name: Set domain
-        run: echo "DOMAIN=unicorncatconsulting.com" >> $GITHUB_ENV # TODO set your custom domain
-        # If you're using the default github pages url, use this instead:
-        # run: echo "DOMAIN=${{ github.actor }}.github.io" >> $GITHUB_ENV
+        run: echo "DOMAIN=unicorncatconsulting.com" >> $GITHUB_ENV
 
       - name: Checkout website repo
         uses: actions/checkout@v2
         with:
-          submodules: true # fetch the theme
-          # you need to set this as an environment env if your repo or any submodules (e.g the theme) is private:
-          # token: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          submodules: true
 
       - uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Set production base URL
-        run: echo "BASE_URL=https://${{ env.DOMAIN }}/${{ github.event.repository.name }}/" >> $GITHUB_ENV
+        run: echo "BASE_URL=https://${{ env.DOMAIN }}/" >> $GITHUB_ENV
 
       - name: Set base URL for preview if PR
         if: github.ref != 'refs/heads/main'
@@ -63,7 +59,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          cname: ${{ env.DOMAIN }} # TODO you need to set this if you're using a custom domain. Otherwise you can remove it.
+          cname: ${{ env.DOMAIN }}
 
       - name: Deploy to PR preview
         uses: peaceiris/actions-gh-pages@v3
@@ -71,7 +67,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          destination_dir: ${{ env.PR_PATH }} # TODO you need to set this if you're using a custom domain. Otherwise you can remove it.
+          destination_dir: ${{ env.PR_PATH }}
 
       - name: Update comment
         uses: hasura/comment-progress@v2.2.0

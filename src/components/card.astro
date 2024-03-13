@@ -9,12 +9,20 @@ type Props = {
 const { header, icon } = Astro.props as Props;
 ---
 
-<div class="rounded shadow-lg border-slate-200 border w-full">
-  <div class="px-6 py-4">
-    {icon && <Icon icon={icon} />}
-    {header && <div class="font-bold text-xl mb-2">{header}</div>}
-    <p class="text-gray-700 text-base">
-      <slot />
-    </p>
+<div class="rounded shadow-sm border-slate-200 border w-full">
+  <div class="flex gap-2">
+    {
+      icon && (
+        <div class="justify-center items-center w-2/12 hidden md:flex">
+          <Icon icon={icon} class="inline-block" />
+        </div>
+      )
+    }
+    <div class={`pr-6 py-4 ${icon ? "pl-6 md:pl-0 w-10/12" : "px-6"}`}>
+      <div class="font-bold text-xl mb-2 font-serif"><slot name="header" /></div>
+      <p class="text-gray-700 text-base">
+        <slot />
+      </p>
+    </div>
   </div>
 </div>
