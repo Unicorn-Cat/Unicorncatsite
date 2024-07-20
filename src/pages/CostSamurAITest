@@ -1,0 +1,69 @@
+---
+import BaseLayout from "../layouts/base.astro";
+import Card from "../components/card.astro";
+---
+<BaseLayout>
+ <div class="" slot="content">
+ <header class="bg-gradient-to-r from-[#5f4085] to-[#2b1c3c] text-white p-5 text-center">
+    <h1 class="font-montserrat text-4xl font-bold">Unicorncat Consulting</h1>
+    <h1 class="font-montserrat text-3xl mt-2">LLM Selection Questionnaire</h1>
+ </header>
+ <main class="container mx-auto mt-8">
+    <form action="results.html" method="GET" class="bg-white p-6 rounded-lg shadow-md">
+      <div class="mb-4">
+        <label for="purpose" class="block text-sm font-bold text-gray-700 mb-2">What is the primary function you need the AI to perform?</label>
+        <select id="purpose" name="purpose" required class="w-full p-2 border rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+          <option value="">Select an option</option>
+          <option value="content">Content generation</option>
+          <option value="data-analysis">Data analysis</option>
+          <option value="support">Customer support</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label for="performance" class="block text-gray-700 text-sm font-bold mb-2">How fast do you need the model to respond to queries?</label>
+        <select id="performance" name="performance" class="w-full p-2 border rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+          <option value="">Select an option</option>
+          <option value="fast">As fast as possible</option>
+          <option value="moderate">A few seconds delay is acceptable</option>
+          <option value="slow">Longer wait times are acceptable</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label for="budget" class="block text-gray-700 text-sm font-bold mb-2">What is your budget for implementing an LLM solution?</label>
+        <select id="budget" name="budget" class="w-full p-2 border rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+          <option value="">Select an option</option>
+          <option value="low">Under $1,000/month</option>
+          <option value="medium">$1,000 to $10,000/month</option>
+          <option value="high">Over $10,000/month</option>
+          <option value="undetermined">Not sure</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label for="technical_capability" class="block text-gray-700 text-sm font-bold mb-2">What is the technical expertise of your team regarding AI and machine learning?</label>
+        <select id="technical_capability" name="technical_capability" class="w-full p-2 border rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+          <option value="">Select an option</option>
+          <option value="expert">Expert</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="novice">Novice</option>
+          <option value="none">None</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label for="usage" class="block text-gray-700 text-sm font-bold mb-2">How much traffic or usage do you anticipate for the AI?</label>
+        <select id="usage" name="usage" class="w-full p-2 border rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+          <option value="">Select an option</option>
+          <option value="light">Light use</option>
+          <option value="moderate">Moderate use</option>
+          <option value="heavy">Heavy use</option>
+          <option value="unsure">Not sure</option>
+        </select>
+      </div>
+      <div class="text-center mt-6">
+        <button type="submit" class="bg-[#5f4085] text-white py-2 px-4 rounded hover:bg-[#7c55ad] transition duration-300">Submit</button>
+      </div>
+    </form>
+ </main>
+ </div>
+ </div>
+</BaseLayout>
