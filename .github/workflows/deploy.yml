@@ -11,7 +11,7 @@ permissions: write-all
 
 jobs:
   deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       PR_PATH: pull/${{github.event.number}}
     steps:
