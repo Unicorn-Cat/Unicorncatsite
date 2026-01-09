@@ -4,7 +4,7 @@ import MenuLink from "../components/menuLink.astro";
 import Icon from "../components/icon.astro";
 
 type Props = {
-  title?: string;
+    title?: string;
 };
 
 const { title = "Unicorncat Consulting" } = Astro.props as Props;
@@ -12,173 +12,176 @@ const { title = "Unicorncat Consulting" } = Astro.props as Props;
 
 <!doctype html>
 <html lang="en-US" class="h-full scroll-smooth bg-white antialiased">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
 
-    <title>{title}</title>
+        <title>{title}</title>
 
-    <base href={process.env.BASE_URL || "/"} />
+        <base href={process.env.BASE_URL || "/"} />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="public/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="public/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="public/favicon-16x16.png" />
-    <link rel="manifest" href="public/site.webmanifest" />
+        <link rel="apple-touch-icon" sizes="180x180" href="public/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="public/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="public/favicon-16x16.png" />
+        <link rel="manifest" href="public/site.webmanifest" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet"
-    />
-    <link href="/main.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+            rel="stylesheet"
+        />
+        <link href="/main.css" rel="stylesheet" />
 
-    <ViewTransitions />
-  </head>
+        <ViewTransitions />
+    </head>
 
-  <body class="flex flex-col w-full min-h-full text-gray-800 bg-gray-100">
-    <header
-      class="h-22 text-white bg-gradient-to-br border-t-4 border-[#7c55ad] from-[#5f4085] to-[#2b1c3c] p-12">
-      <div class="flex justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto">
-        <a href="/" class="flex items-center justify-center">
-          <img src="/logo-new.png" class="inline-block" height="70px" width="70px" />
-          <h1
-            class="font-sans text-xl md:text-3xl font-serif font-bold text-white leading-tight tracking-tight inline-block ml-2 md:ml-5 mt-2">
-            Unicorncat Consulting
-          </h1></a
-        >
+    <body class="flex flex-col w-full min-h-full text-gray-800 bg-gray-100">
+        <header
+            class="h-22 text-white bg-gradient-to-br border-t-4 border-[#7c55ad] from-[#5f4085] to-[#2b1c3c] p-12">
+            <div
+                class="flex justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto">
+                <a
+                    href="/"
+                    class="flex items-center justify-center transition-transform hover:scale-105">
+                    <img src="/logo-new.png" class="inline-block" height="70px" width="70px" />
+                    <h1
+                        class="font-sans text-xl md:text-3xl font-serif font-bold text-white leading-tight tracking-tight inline-block ml-2 md:ml-5 mt-2">
+                        Unicorncat Consulting
+                    </h1></a
+                >
 
-        <div class="flex gap-6 text-white text-lg justify-center items-center">
-          <div class="block lg:hidden mt-2">
-            <button class="hamburger z-50 relative left-2"><div></div></button>
-          </div>
+                <div class="flex gap-6 text-white text-lg justify-center items-center">
+                    <div class="block lg:hidden mt-2">
+                        <button class="hamburger z-50 relative left-2"><div></div></button>
+                    </div>
 
-          <div
-            class="menu gap-6 justify-between items-center hidden lg:flex lg:static fixed right-0 top-0 bottom-0">
-            <MenuLink href="resources">Resources</MenuLink>
-            <MenuLink href="about-us">About Us</MenuLink>
-            <a
-              href="mailto:alex@unicorncatconsulting.com"
-              class="rounded-lg px-6 py-4 bg-[#5f4085] text-white font-semibold opacity-80 hover:opacity-100 transition"
-              >Contact us</a
-            >
-          </div>
-        </div>
-      </div>
+                    <div
+                        class="menu gap-6 justify-between items-center hidden lg:flex lg:static fixed right-0 top-0 bottom-0">
+                        <MenuLink href="resources">Resources</MenuLink>
+                        <MenuLink href="about-us">About Us</MenuLink>
+                        <a
+                            href="mailto:alex@unicorncatconsulting.com"
+                            class="rounded-lg px-6 py-4 bg-[#5f4085] text-white font-semibold opacity-80 hover:bg-[#704c9d] hover:opacity-100 transition"
+                            >Contact us</a
+                        >
+                    </div>
+                </div>
+            </div>
 
-      <slot name="header-content" />
-    </header>
+            <slot name="header-content" />
+        </header>
 
-    <main class="flex-auto my-12 px-12 md:px-0 text-lg">
-      <slot name="content" />
-    </main>
+        <main class="flex-auto my-12 px-12 md:px-0 text-lg">
+            <slot name="content" />
+        </main>
 
-    <footer class="mt-32 bg-[#222] text-gray-200 px-12 py-24">
-      <div
-        class="flex flex-col md:flex-row justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto">
-        <slot name="footer-content">
-          <div>
-            <h2
-              class="text-white font-sans text-xl font-semibold text-whiteleading-tight tracking-tight mb-2">
-              Unicorncat Consulting
-            </h2>
+        <footer class="mt-32 bg-[#222] text-gray-200 px-12 py-24">
+            <div
+                class="flex flex-col md:flex-row justify-between items-center max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto">
+                <slot name="footer-content">
+                    <div>
+                        <h2
+                            class="text-white font-sans text-xl font-semibold text-whiteleading-tight tracking-tight mb-2">
+                            Unicorncat Consulting
+                        </h2>
 
-            <div>© 2024 All rights reserved.</div>
-          </div>
+                        <div>© {new Date().getFullYear()} All rights reserved.</div>
+                    </div>
 
-          <div class="flex flex-col mt-8 md:mt-0">
-            <a
-              class="flex items-center opacity-75 hover:opacity-100 transition"
-              href="https://www.linkedin.com/company/unicorncat-consulting"
-              ><Icon icon="linkedin" class="inline-block w-5 mr-2 invert" /> LinkedIn</a
-            >
-            <a
-              class="flex items-center opacity-75 hover:opacity-100 transition"
-              href="emailto:alex@unicorncatconsulting.com"
-              ><Icon icon="mail" class="inline-block w-5 mr-2 invert" /> alex@unicorncatconsulting.com</a
-            >
-          </div>
-        </slot>
-      </div>
-    </footer>
-    <script is:inline>
-      window.onload = function () {
-        const toggler = document.querySelector(".hamburger");
-        const menu = document.querySelector(".menu");
+                    <div class="flex flex-col mt-8 md:mt-0">
+                        <a
+                            class="flex items-center opacity-75 hover:opacity-100 transition"
+                            href="https://www.linkedin.com/company/unicorncat-consulting"
+                            ><Icon icon="linkedin" class="inline-block w-5 mr-2 invert" /> LinkedIn</a
+                        >
+                        <a
+                            class="flex items-center opacity-75 hover:opacity-100 transition"
+                            href="emailto:alex@unicorncatconsulting.com"
+                            ><Icon icon="mail" class="inline-block w-5 mr-2 invert" /> alex@unicorncatconsulting.com</a
+                        >
+                    </div>
+                </slot>
+            </div>
+        </footer>
+        <script is:inline>
+            window.onload = function () {
+                const toggler = document.querySelector(".hamburger");
+                const menu = document.querySelector(".menu");
 
-        toggler?.addEventListener("click", () => {
-          toggler?.classList.toggle("active");
-          menu?.classList.toggle("hidden");
-          menu?.classList.toggle("mobile-menu");
-        });
-      };
-    </script>
+                toggler?.addEventListener("click", () => {
+                    toggler?.classList.toggle("active");
+                    menu?.classList.toggle("hidden");
+                    menu?.classList.toggle("mobile-menu");
+                });
+            };
+        </script>
 
-    <style>
-      .hamburger {
-        height: 40px;
-        width: 60px;
-        padding: 0.2rem;
+        <style>
+            .hamburger {
+                height: 40px;
+                width: 60px;
+                padding: 0.2rem;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
 
-      .hamburger > div {
-        position: relative;
-        top: 0;
-        right: 0;
-        background: white;
-        height: 2px;
-        width: 60%;
-        transition: all 0.4s ease;
-      }
-      .hamburger > div::before,
-      .hamburger > div::after {
-        content: "";
-        position: absolute;
-        top: -10px;
-        right: 0;
-        background: white;
-        width: 100%;
-        height: 2px;
-        transition: all 0.4s ease;
-      }
+            .hamburger > div {
+                position: relative;
+                top: 0;
+                right: 0;
+                background: white;
+                height: 2px;
+                width: 60%;
+                transition: all 0.4s ease;
+            }
+            .hamburger > div::before,
+            .hamburger > div::after {
+                content: "";
+                position: absolute;
+                top: -10px;
+                right: 0;
+                background: white;
+                width: 100%;
+                height: 2px;
+                transition: all 0.4s ease;
+            }
 
-      .hamburger > div::after {
-        top: 10px;
-      }
+            .hamburger > div::after {
+                top: 10px;
+            }
 
-      .active.hamburger > div {
-        background: rgba(0, 0, 0, 0);
-      }
+            .active.hamburger > div {
+                background: rgba(0, 0, 0, 0);
+            }
 
-      .active.hamburger > div::before {
-        top: 0;
-        transform: rotate(45deg);
-        background: #333;
-      }
+            .active.hamburger > div::before {
+                top: 0;
+                transform: rotate(45deg);
+                background: #333;
+            }
 
-      .active.hamburger > div::after {
-        top: 0;
-        transform: rotate(135deg);
-        background: #333;
-      }
+            .active.hamburger > div::after {
+                top: 0;
+                transform: rotate(135deg);
+                background: #333;
+            }
 
-      .mobile-menu {
-        display: flex;
-        background: rgb(243 244 246 / var(--tw-bg-opacity));
-        padding: 8rem 4rem 1rem 4rem;
-        color: #333;
-        flex-direction: column;
-        justify-content: flex-start !important;
-        z-index: 49;
-      }
-    </style>
-  </body>
+            .mobile-menu {
+                display: flex;
+                background: rgb(243 244 246 / var(--tw-bg-opacity));
+                padding: 8rem 4rem 1rem 4rem;
+                color: #333;
+                flex-direction: column;
+                justify-content: flex-start !important;
+                z-index: 49;
+            }
+        </style>
+    </body>
 </html>

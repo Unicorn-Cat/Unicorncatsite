@@ -1,9 +1,13 @@
 ---
 type Props = {
-  href: string;
+    href: string;
 };
 
 const { href } = Astro.props as Props;
 ---
 
-<a href={href} class="hover:opacity-100 opacity-80 transition"><slot /></a>
+<a
+    href={href}
+    class="hover:opacity-100 hover:bg-[#2b1c3c] rounded-lg px-6 py-4 opacity-80 transition"
+    ><slot /></a
+>
