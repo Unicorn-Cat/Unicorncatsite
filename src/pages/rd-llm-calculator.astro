@@ -1,0 +1,111 @@
+---
+// Import necessary components
+import Layout from '../layouts/base.astro';
+import { useState } from 'astro/client';
+
+// Define initial state for form data
+const [formData, setFormData] = useState({
+  purpose: '',
+  performance: '',
+  budget: '',
+  technical_capability: '',
+  usage: ''
+});
+
+// Function to handle form submission
+function handleSubmit(event) {
+  event.preventDefault();
+  // Ideally, handle the form data by either sending it to a server or displaying results
+  console.log(formData);
+}
+
+// Function to handle input changes
+function handleChange(event) {
+  const { name, value } = event.target;
+  setFormData(prev => ({ ...prev, [name]: value }));
+}
+---
+
+<Layout title="LLM Selection Questionnaire">
+  <form class="my-12 mx-auto max-w-4xl p-6 bg-white shadow rounded-lg" onSubmit={handleSubmit}>
+    <h1 class="text-xl font-bold mb-4">LLM Selection Questionnaire</h1>
+    
+    <!-- Purpose and Use Case -->
+    <div class="mb-4">
+      <label for="purpose" class="block text-gray-700 text-sm font-bold mb-2">
+        What is the primary function you need the AI to perform?
+      </label>
+      <select id="purpose" name="purpose" required class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              onChange={handleChange}>
+        <option value="">Select an option</option>
+        <option value="content">Content generation</option>
+        <option value="data_analysis">Data analysis</option>
+        <option value="support">Customer support</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <!-- Performance Requirements -->
+    <div class="mb-4">
+      <label for="performance" class="block text-gray-700 text-sm font-bold mb-2">
+        How fast do you need the model to respond to queries?
+      </label>
+      <select id="performance" name="performance" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              onChange={handleChange}>
+        <option value="">Select an option</option>
+        <option value="fast">As fast as possible</option>
+        <option value="moderate">A few seconds delay is acceptable</option>
+        <option value="slow">Longer wait times are acceptable</option>
+      </select>
+    </div>
+
+    <!-- Budget and Costs -->
+    <div class="mb-4">
+      <label for="budget" class="block text-gray-700 text-sm font-bold mb-2">
+        What is your budget for implementing an LLM solution?
+      </label>
+      <select id="budget" name="budget" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              onChange={handleChange}>
+        <option value="">Select an option</option>
+        <option value="low">Under $1,000/month</option>
+        <option value="medium">$1,000 to $10,000/month</option>
+        <option value="high">Over $10,000/month</option>
+        <option value="undetermined">Not determined yet</option>
+      </select>
+    </div>
+
+    <!-- Technical Capability -->
+    <div class="mb-4">
+      <label for="technical_capability" class="block text-gray-700 text-sm font-bold mb-2">
+        What is the technical expertise of your team regarding AI and machine learning?
+      </label>
+      <select id="technical_capability" name="technical_capability" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              onChange={handleChange}>
+        <option value="">Select an option</option>
+        <option value="expert">Expert</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="novice">Novice</option>
+        <option value="none">No experience</option>
+      </select>
+    </div>
+
+    <!-- Traffic or Usage -->
+    <div class="mb-4">
+      <label for="usage" class="block text-gray-700 text-sm font-bold mb-2">
+        How much traffic or usage do you anticipate for the AI?
+      </label>
+      <select id="usage" name="usage" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              onChange={handleChange}>
+        <option value="">Select an option</option>
+        <option value="light">Light use</option>
+        <option value="moderate">Moderate use</option>
+        <option value="heavy">Heavy use</option>
+        <option value="unsure">Not sure yet</option>
+      </select>
+    </div>
+
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+      Submit
+    </button>
+  </form>
+</Layout>
