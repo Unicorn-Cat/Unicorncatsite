@@ -1,0 +1,474 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/base.astro";
+import Nav from "../../components/Nav.astro";
+import FooterBoard from "../../components/FooterBoard.astro";
+import BoardRow from "../../components/BoardRow.astro";
+import { sortByDateDesc, sortPinned, visiblePosts } from "../../lib/blog";
+
+const posts = visiblePosts(await getCollection("blog"));
+const pinned = sortPinned(posts.filter((p) => p.data.pinned));
+const recent = sortByDateDesc(posts.filter((p) => !p.data.pinned));
+
+const filters = [
+    { label: "all", value: null },
+    { label: "success stories", value: "success story" },
+    { label: "adoption", value: "adoption" },
+    { label: "training", value: "training" },
+    { label: "software", value: "software" },
+    { label: "news", value: "news" },
+];
+---
+
+<Base title="The Workbench — Unicorncat Consulting" board>
+    <!-- Brand nav + masthead -->
+    <div class="masthead">
+        <Nav active="blog" />
+        <div class="masthead-band">
+            <div class="container-board masthead-row">
+                <div class="masthead-title">
+                    <div class="crumb">
+                        unicorncat<span class="crumb-sep"> » </span>the workbench
+                    </div>
+                    <h1>The Workbench</h1>
+                    <p class="tagline">What we're learning, what worked, and what we broke.</p>
+                </div>
+                <form class="board-search" method="get" action="blog" role="search">
+                    <input
+                        type="text"
+                        name="q"
+                        placeholder="search posts…"
+                        aria-label="Search posts"
+                        class="masthead-search"
+                    />
+                    <input type="hidden" name="category" value="" data-search-category />
+                    <button type="submit" class="bevel-btn go-btn">Go</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog body -->
+    <div class="container-board board-body">
+        <!-- Category filter toolbar -->
+        <div class="filter-bar">
+            <span class="filter-label">filter:</span>
+            {
+                filters.map((f) => (
+                    <a
+                        href={f.value ? `blog?category=${encodeURIComponent(f.value)}` : "blog"}
+                        class:list={["pgbtn", !f.value && "pgbtn--selected"]}
+                        data-filter-cat={f.value ?? ""}
+                    >
+                        {f.label}
+                    </a>
+                ))
+            }
+        </div>
+
+        <!-- Search results — populated client-side from ?q=, hidden otherwise -->
+        <div class="search-wrap" data-search-wrap hidden>
+            <a href="blog" class="bevel-btn back-to-all">« Back to all posts</a>
+            <div class="board-panel">
+                <div class="board-head">
+                    <span>Search results</span>
+                    <span class="board-head-sub" data-search-count></span>
+                </div>
+                <div class="board-cols">
+                    <div></div>
+                    <div>Post</div>
+                    <div>Published</div>
+                </div>
+                <div data-search-rows></div>
+            </div>
+        </div>
+
+        <!-- Pinned & start here -->
+        <div class="board-panel board-panel--pinned pinned-panel" data-panel="pinned">
+            <div class="board-head">
+                <span>Pinned &amp; start here</span>
+                <span class="board-head-sub">{pinned.length} posts</span>
+            </div>
+            <div class="board-cols">
+                <div></div>
+                <div>Post</div>
+                <div>Published</div>
+            </div>
+            {pinned.map((post, i) => <BoardRow post={post} alt={i % 2 === 1} />)}
+        </div>
+
+        <!-- Recent posts -->
+        <div class="board-panel" data-panel="recent">
+            <div class="board-head">
+                <span>Recent posts</span>
+                <span class="board-head-sub">newest first</span>
+            </div>
+            <div class="board-cols">
+                <div></div>
+                <div>Post</div>
+                <div>Published</div>
+            </div>
+            {recent.map((post, i) => <BoardRow post={post} alt={i % 2 === 1} />)}
+        </div>
+
+        <!-- Count + pagination -->
+        <div class="board-foot">
+            <div class="board-count" data-post-count>
+                {posts.length} posts · written by Alex &amp; Dylan
+            </div>
+            <div class="board-pages" data-pages hidden>
+                <span>Pages:</span>
+                <span data-page-buttons></span>
+            </div>
+        </div>
+
+        <!-- Subscribe -->
+        <div class="board-panel subscribe-panel">
+            <div class="board-head">Get new posts by email</div>
+            <div class="subscribe-body">
+                <span class="subscribe-copy"
+                    >Whenever we post. Occasional, practical, no spam. Unsubscribe anytime.</span
+                >
+                <div class="subscribe-controls">
+                    <input
+                        type="email"
+                        placeholder="you@company.com"
+                        aria-label="Email address"
+                        class="board-input subscribe-input"
+                        data-subscribe-input
+                    />
+                    <a
+                        class="bevel-btn subscribe-btn"
+                        data-subscribe-btn
+                        href="mailto:alex@unicorncatconsulting.com?subject=Subscribe%20to%20The%20Workbench"
+                        >Subscribe</a
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <FooterBoard page="blog" />
+</Base>
+
+<script>
+    /**
+     * Board state lives in the URL — ?category=, ?q=, ?page= — so every view is
+     * linkable. The site is statically built, so the filtering happens here over
+     * the rows the build already emitted.
+     */
+    const PER_PAGE = 5;
+
+    const params = new URLSearchParams(location.search);
+    const cat = params.get("category") ?? "";
+    const q = (params.get("q") ?? "").trim().toLowerCase();
+    const page = Math.max(1, parseInt(params.get("page") ?? "1", 10) || 1);
+
+    const pinnedPanel = document.querySelector<HTMLElement>("[data-panel='pinned']")!;
+    const recentPanel = document.querySelector<HTMLElement>("[data-panel='recent']")!;
+    const searchWrap = document.querySelector<HTMLElement>("[data-search-wrap]")!;
+    const searchRows = document.querySelector<HTMLElement>("[data-search-rows]")!;
+    const searchCount = document.querySelector<HTMLElement>("[data-search-count]")!;
+    const countEl = document.querySelector<HTMLElement>("[data-post-count]")!;
+    const pagesEl = document.querySelector<HTMLElement>("[data-pages]")!;
+    const pageButtons = document.querySelector<HTMLElement>("[data-page-buttons]")!;
+
+    /** Build a /blog URL that keeps whatever state isn't being changed. */
+    function boardUrl(patch: Record<string, string | null>) {
+        const url = new URL("blog", document.baseURI);
+        const next = new URLSearchParams();
+        if (cat) next.set("category", cat);
+        if (q) next.set("q", params.get("q")!.trim());
+        for (const [key, value] of Object.entries(patch)) {
+            if (value === null) next.delete(key);
+            else next.set(key, value);
+        }
+        url.search = next.toString();
+        return url.toString();
+    }
+
+    // Reflect current state in the search box and the filter chips
+    const searchInput = document.querySelector<HTMLInputElement>(".masthead-search");
+    if (searchInput) searchInput.value = params.get("q") ?? "";
+    const searchCategory = document.querySelector<HTMLInputElement>("[data-search-category]");
+    if (searchCategory) {
+        // Only carry the category through the search form when one is active,
+        // so a plain search produces a clean ?q= URL.
+        searchCategory.value = cat;
+        searchCategory.disabled = !cat;
+    }
+
+    document.querySelectorAll<HTMLAnchorElement>("[data-filter-cat]").forEach((chip) => {
+        const value = chip.dataset.filterCat ?? "";
+        chip.classList.toggle("pgbtn--selected", value === cat);
+        // Switching category keeps the search term but always returns to page 1
+        const url = new URL("blog", document.baseURI);
+        const next = new URLSearchParams();
+        if (value) next.set("category", value);
+        if (q) next.set("q", params.get("q")!.trim());
+        url.search = next.toString();
+        chip.href = url.toString();
+    });
+
+    /** Zebra stripes and the last-row border are positional, so restripe. */
+    function restripe(rows: HTMLElement[]) {
+        rows.forEach((row, i) => {
+            row.classList.toggle("alt", i % 2 === 1);
+            row.classList.toggle("frow--last", i === rows.length - 1);
+        });
+    }
+
+    function emptyRow(container: HTMLElement, message: string) {
+        const div = document.createElement("div");
+        div.className = "board-empty";
+        div.textContent = message;
+        container.appendChild(div);
+    }
+
+    function renderPages(total: number) {
+        const pageCount = Math.ceil(total / PER_PAGE);
+        // One page is not a control worth showing
+        if (pageCount <= 1) {
+            pagesEl.hidden = true;
+            return;
+        }
+        pagesEl.hidden = false;
+        pageButtons.replaceChildren();
+        for (let n = 1; n <= pageCount; n++) {
+            const a = document.createElement("a");
+            a.className = n === page ? "pgbtn pgbtn--selected" : "pgbtn";
+            a.textContent = String(n);
+            a.href = boardUrl({ page: String(n) });
+            pageButtons.appendChild(a);
+        }
+        const next = document.createElement(page >= pageCount ? "span" : "a");
+        next.className = page >= pageCount ? "pgbtn pgbtn--disabled" : "pgbtn";
+        next.textContent = "»";
+        if (next instanceof HTMLAnchorElement) next.href = boardUrl({ page: String(page + 1) });
+        else next.setAttribute("aria-disabled", "true");
+        pageButtons.appendChild(next);
+    }
+
+    const pinnedRows = [...pinnedPanel.querySelectorAll<HTMLElement>(".frow")];
+    const recentRows = [...recentPanel.querySelectorAll<HTMLElement>(".frow")];
+
+    function paginate(rows: HTMLElement[]) {
+        const start = (page - 1) * PER_PAGE;
+        rows.forEach((row, i) => {
+            row.hidden = i < start || i >= start + PER_PAGE;
+        });
+        return rows.filter((row) => !row.hidden);
+    }
+
+    if (q) {
+        // Search spans the whole board — pinned threads included — and replaces
+        // both panels with a single results panel.
+        const matches = [...pinnedRows, ...recentRows].filter((row) =>
+            (row.dataset.search ?? "").includes(q),
+        );
+        const scoped = cat ? matches.filter((row) => row.dataset.category === cat) : matches;
+
+        pinnedPanel.hidden = true;
+        recentPanel.hidden = true;
+        searchWrap.hidden = false;
+        searchCount.textContent = `${scoped.length} ${scoped.length === 1 ? "match" : "matches"}`;
+
+        if (scoped.length === 0) {
+            emptyRow(searchRows, "No posts match that search.");
+        } else {
+            scoped.forEach((row) => searchRows.appendChild(row));
+            restripe(paginate(scoped));
+        }
+        countEl.textContent = `${scoped.length} post${scoped.length === 1 ? "" : "s"} · written by Alex & Dylan`;
+        renderPages(scoped.length);
+    } else {
+        // Category filters the Recent panel only — pinned stays pinned.
+        const scoped = cat
+            ? recentRows.filter((row) => row.dataset.category === cat)
+            : recentRows;
+        recentRows.forEach((row) => {
+            row.hidden = !scoped.includes(row);
+        });
+
+        if (cat && scoped.length === 0) {
+            emptyRow(recentPanel, "No posts in that category yet.");
+            countEl.textContent = "0 posts · written by Alex & Dylan";
+        } else {
+            restripe(paginate(scoped));
+            const total = cat ? scoped.length : pinnedRows.length + recentRows.length;
+            countEl.textContent = `${total} post${total === 1 ? "" : "s"} · written by Alex & Dylan`;
+        }
+        renderPages(scoped.length);
+    }
+
+    // Subscribe has no list provider yet, so it hands off to email rather than
+    // POSTing into the void. The typed address rides along in the body.
+    const subInput = document.querySelector<HTMLInputElement>("[data-subscribe-input]");
+    const subBtn = document.querySelector<HTMLAnchorElement>("[data-subscribe-btn]");
+    if (subInput && subBtn) {
+        const base = "mailto:alex@unicorncatconsulting.com?subject=Subscribe%20to%20The%20Workbench";
+        const sync = () => {
+            const value = subInput.value.trim();
+            subBtn.href = value
+                ? `${base}&body=${encodeURIComponent(`Please add ${value} to The Workbench list.`)}`
+                : base;
+        };
+        subInput.addEventListener("input", sync);
+        sync();
+    }
+</script>
+
+<style>
+    .masthead {
+        background: var(--uc-hero-gradient);
+    }
+    .masthead-band {
+        border-top: 1px solid var(--rule-on-dark);
+    }
+    .masthead-row {
+        padding-top: 30px;
+        padding-bottom: 34px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+    .crumb {
+        font-family: var(--font-body);
+        font-size: 11px;
+        letter-spacing: var(--tr-meta);
+        color: var(--uc-lavender-faint);
+        margin-bottom: 12px;
+    }
+    .crumb-sep {
+        color: #6d5590;
+    }
+    h1 {
+        font-family: var(--font-display);
+        font-weight: var(--fw-black);
+        font-size: var(--fs-h1-blog);
+        line-height: 1.02;
+        letter-spacing: var(--tr-heading);
+        color: #fff;
+        margin: 0;
+    }
+    .tagline {
+        font-family: var(--font-body);
+        font-size: 14px;
+        line-height: 1.55;
+        color: var(--uc-lavender);
+        max-width: 600px;
+        margin: 12px 0 0 0;
+    }
+    .board-search {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+    .masthead-search {
+        font-family: var(--font-body);
+        font-size: var(--fs-meta);
+        color: var(--bd-text);
+        background: var(--bd-row-alt);
+        border: 1px solid #1c1226;
+        border-radius: var(--radius-1);
+        padding: 8px 10px;
+        outline: none;
+        width: 150px;
+        box-shadow: var(--shadow-input-inset-dark);
+    }
+    .masthead-search:focus {
+        box-shadow: var(--shadow-focus), var(--shadow-input-inset-dark);
+    }
+    .go-btn {
+        padding: 8px 12px;
+    }
+
+    .board-body {
+        padding-top: 32px;
+        padding-bottom: 56px;
+    }
+    .filter-bar {
+        display: flex;
+        gap: 7px;
+        align-items: center;
+        flex-wrap: wrap;
+        font-family: var(--font-body);
+        font-size: 11px;
+        margin-bottom: 18px;
+    }
+    .filter-label {
+        color: var(--bd-text-3);
+        margin-right: 2px;
+    }
+    .pinned-panel {
+        margin-bottom: 26px;
+    }
+
+    .back-to-all {
+        padding: 8px 15px;
+        margin-bottom: 14px;
+    }
+
+    .subscribe-panel {
+        margin-top: 32px;
+    }
+    .subscribe-body {
+        background: var(--bd-row);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .subscribe-copy {
+        font-family: var(--font-body);
+        font-size: var(--fs-excerpt);
+        color: var(--bd-text-2);
+        line-height: 1.5;
+    }
+    .subscribe-controls {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .subscribe-input {
+        min-width: 220px;
+    }
+    .subscribe-btn {
+        padding: 9px 16px;
+    }
+
+    @media (max-width: 1023px) {
+        h1 {
+            font-size: 30px;
+        }
+        /* Search drops below the title block once the masthead wraps */
+        .masthead-row {
+            align-items: flex-start;
+        }
+        .masthead-title {
+            flex: 1 1 100%;
+        }
+    }
+    @media (max-width: 767px) {
+        h1 {
+            font-size: 26px;
+        }
+        .subscribe-controls {
+            width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .subscribe-input {
+            min-width: 0;
+            width: 100%;
+        }
+        .subscribe-btn {
+            text-align: center;
+        }
+    }
+</style>
