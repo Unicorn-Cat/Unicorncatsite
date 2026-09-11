@@ -1,0 +1,21 @@
+* {
+  font-optical-sizing: auto;
+}
+
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+  margin: 12px 0 6px 0 !important;
+}
+
+.content p {
+  margin-bottom: 14px;
+}
+
+.content ul {
+  list-style: disc;
+  margin-left: 20px;
+}
