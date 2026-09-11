@@ -1,5 +1,8 @@
 import { defineCollection, z } from "astro:content";
 
+// Blog ("The Workbench"): board posts, including lightly polished transcripts of
+// the weekly Alex + Dylan meeting. Transcript posts are written by the
+// meeting-to-website pipeline and published by a human merging the PR.
 const blog = defineCollection({
     type: "content",
     schema: z.object({
@@ -22,7 +25,38 @@ const blog = defineCollection({
         ctaHeading: z.string().optional(),
         ctaBody: z.string().optional(),
         draft: z.boolean().default(false),
+
+        // Meeting-to-website pipeline fields (see _schema-example.md)
+        /** Longer summary for RSS; the board row uses `excerpt` */
+        description: z.string().optional(),
+        /** Everyone in the source conversation, full names */
+        authors: z.array(z.string()).optional(),
+        tags: z.array(z.string()).default([]),
+        /** Transcript stem, e.g. 2026-09-10-1400-staff-weekly */
+        sourceMeeting: z.string().optional(),
+        /** Slug of the matching podcast episode entry, if any */
+        episode: z.string().optional(),
     }),
 });
 
-export const collections = { blog };
+// Podcast: content type for the recording behind a transcript post. Kept as a
+// collection so the pipeline can land episode files; the site renders no
+// podcast pages — transcripts surface on the blog instead.
+const podcast = defineCollection({
+    type: "content",
+    schema: z.object({
+        title: z.string(),
+        description: z.string(),
+        date: z.coerce.date(),
+        episode: z.number().int().positive(),
+        hosts: z.array(z.string()).default(["Alex Gunter", "Dylan Paulus"]),
+        durationMinutes: z.number().int().positive().optional(),
+        audioUrl: z.string().url().optional(),
+        audioBytes: z.number().int().positive().optional(),
+        sourceMeeting: z.string().optional(),
+        blogPost: z.string().optional(), // slug of the matching blog post, if any
+        draft: z.boolean().default(false),
+    }),
+});
+
+export const collections = { blog, podcast };

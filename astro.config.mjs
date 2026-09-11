@@ -5,6 +5,7 @@ const ASSET_PATH = process.env.BASE_URL || "/";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://unicorncatconsulting.com",
   build: {
     assets: "_assets",
     assetsPrefix: ASSET_PATH,
