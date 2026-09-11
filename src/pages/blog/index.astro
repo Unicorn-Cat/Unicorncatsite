@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../../layouts/base.astro";
+import Card from "../../components/card.astro";
+import { getPublishedBlog, formatDate } from "../../lib/content";
+
+const posts = await getPublishedBlog();
+---
+
+<BaseLayout title="Blog | Unicorncat Consulting">
+    <div slot="content">
+        <div class="content flex flex-col justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto">
+            <h2 class="font-sans text-4xl font-bold text-slate-800 leading-tight tracking-tight font-serif">
+                Blog
+            </h2>
+            <p>
+                What we actually talked about this week. Lightly cleaned-up transcripts of the weekly
+                founders' conversation. No ghostwriting, no polish for polish's sake.
+                <a class="text-[#5f4085] hover:underline" href="blog/rss.xml">RSS</a>
+            </p>
+
+            {
+                posts.length === 0 ? (
+                    <p class="mt-6 text-gray-600">First post is on its way.</p>
+                ) : (
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                        {posts.map((post) => (
+                            <Card>
+                                <h3 slot="header">
+                                    <a class="pointer hover:underline" href={`blog/${post.slug}`}>
+                                        {post.data.title}
+                                    </a>
+                                </h3>
+                                <span class="block text-sm text-gray-500 mb-2">{formatDate(post.data.date)}</span>
+                                {post.data.description}
+                            </Card>
+                        ))}
+                    </div>
+                )
+            }
+        </div>
+    </div>
+</BaseLayout>

@@ -1,0 +1,33 @@
+---
+import ArticleLayout from "../../layouts/article.astro";
+import { getPublishedPodcast } from "../../lib/content";
+
+export async function getStaticPaths() {
+    const episodes = await getPublishedPodcast();
+    return episodes.map((ep) => ({ params: { slug: ep.slug }, props: { ep } }));
+}
+
+const { ep } = Astro.props;
+const { Content } = await ep.render();
+---
+
+<ArticleLayout
+    title={ep.data.title}
+    description={ep.data.description}
+    date={ep.data.date}
+    kicker={`Episode ${ep.data.episode}`}
+    backHref="podcast"
+    backLabel="All episodes"
+    people={ep.data.hosts}
+    crossHref={ep.data.blogPost ? `blog/${ep.data.blogPost}` : undefined}
+    crossLabel="Read the post">
+    {
+        ep.data.audioUrl && (
+            <audio controls preload="none" class="w-full mb-8">
+                <source src={ep.data.audioUrl} />
+                Your browser does not support the audio element.
+            </audio>
+        )
+    }
+    <Content />
+</ArticleLayout>

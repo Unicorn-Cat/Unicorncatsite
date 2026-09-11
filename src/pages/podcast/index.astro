@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../../layouts/base.astro";
+import Card from "../../components/card.astro";
+import { getPublishedPodcast, formatDate } from "../../lib/content";
+
+const episodes = await getPublishedPodcast();
+---
+
+<BaseLayout title="Podcast | Unicorncat Consulting">
+    <div slot="content">
+        <div class="content flex flex-col justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto">
+            <h2 class="font-sans text-4xl font-bold text-slate-800 leading-tight tracking-tight font-serif">
+                Podcast
+            </h2>
+            <p>
+                The weekly founders' conversation, in episode form: what we tried, what broke, what we
+                decided, and what we'd tell you to do if you hit the same thing.
+                <a class="text-[#5f4085] hover:underline" href="podcast/rss.xml">RSS</a>
+            </p>
+
+            {
+                episodes.length === 0 ? (
+                    <p class="mt-6 text-gray-600">Episode 1 is on its way.</p>
+                ) : (
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                        {episodes.map((ep) => (
+                            <Card>
+                                <h3 slot="header">
+                                    <a class="pointer hover:underline" href={`podcast/${ep.slug}`}>
+                                        Episode {ep.data.episode}: {ep.data.title}
+                                    </a>
+                                </h3>
+                                <span class="block text-sm text-gray-500 mb-2">
+                                    {formatDate(ep.data.date)}
+                                    {ep.data.durationMinutes ? ` · ${ep.data.durationMinutes} min` : ""}
+                                </span>
+                                {ep.data.description}
+                            </Card>
+                        ))}
+                    </div>
+                )
+            }
+        </div>
+    </div>
+</BaseLayout>
