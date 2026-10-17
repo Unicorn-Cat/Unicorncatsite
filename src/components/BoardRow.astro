@@ -1,0 +1,52 @@
+---
+import { AUTHORS, formatDate, formatViews, readingTime, type Post } from "../lib/blog";
+
+type Props = {
+    post: Post;
+    /** Zebra stripe — assigned by the parent, restriped client-side when filtering */
+    alt?: boolean;
+    /** "More from the board" omits the view count */
+    showViews?: boolean;
+    /** Post-page rows run one step smaller and slightly tighter than the board index */
+    compact?: boolean;
+};
+
+const { post, alt = false, showViews = true, compact = false } = Astro.props;
+const { title, excerpt, author, category, date, badge, pinned, views } = post.data;
+const authorInfo = AUTHORS[author];
+const dateStr = formatDate(date);
+const mins = readingTime(post.body);
+const viewsStr = showViews && views != null ? formatViews(views) : null;
+const search = `${title} ${excerpt}`.toLowerCase();
+---
+
+<a
+    href={`blog/${post.slug}`}
+    aria-label={title}
+    class:list={["frow", alt && "alt", compact && "frow--compact"]}
+    data-category={category}
+    data-search={search}
+>
+    <div class="frow-icon">
+        {pinned ? <div class="pin-icon" /> : <div class={`avatar ${authorInfo.avatarClass}`}>{authorInfo.initial}</div>}
+    </div>
+    <div class="frow-main">
+        <div>
+            {badge === "PINNED" && <span class="chip chip--pin">PINNED</span>}
+            {badge === "CASE STUDY" && <span class="chip chip--cat">CASE STUDY</span>}
+            <span class="tlink">{title}</span>
+        </div>
+        <div class="frow-excerpt">{excerpt}</div>
+        <div class="frow-byline">
+            by <span class="by-author">{author}</span> · <span class="by-cat">{category}</span>
+            <span class="frow-meta-inline">
+                {dateStr} · {mins} min read{viewsStr && ` · ${viewsStr}`}
+            </span>
+        </div>
+    </div>
+    <div class="frow-pub">
+        <div class="pub-date">{dateStr}</div>
+        <div>{mins} min read</div>
+        {viewsStr && <div class="pub-views">{viewsStr}</div>}
+    </div>
+</a>

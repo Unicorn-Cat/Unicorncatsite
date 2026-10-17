@@ -1,0 +1,86 @@
+---
+import ContactTrigger from "./ContactTrigger.astro";
+---
+
+<div class="footer-cta">
+    <div class="container">
+        <h2>Tell us what's slowing you down.</h2>
+        <div class="footer-cta-row">
+            <ContactTrigger variant="violet" label="Contact us" />
+            <a href="mailto:alex@unicorncatconsulting.com" class="footer-mail"
+                >alex@unicorncatconsulting.com</a
+            >
+        </div>
+        <div class="footer-fine">
+            <div class="footer-fine-brand">
+                <img src="logo-new.png" alt="" />
+                <span>© 2026 Unicorncat Consulting</span>
+            </div>
+            <a href="https://www.linkedin.com/company/unicorncat-consulting">LinkedIn</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .footer-cta {
+        background: var(--uc-ink-plum);
+    }
+    .footer-cta .container {
+        padding-top: var(--section-pad);
+        padding-bottom: var(--section-pad);
+    }
+    h2 {
+        font-family: var(--font-display);
+        font-weight: 900;
+        font-size: 52px;
+        letter-spacing: -0.03em;
+        color: #fff;
+        margin: 0 0 32px 0;
+        max-width: 800px;
+        line-height: 1.1;
+    }
+    .footer-cta-row {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .footer-mail {
+        font-size: 14px;
+        color: var(--uc-lavender);
+    }
+    .footer-fine {
+        border-top: 1px solid var(--rule-on-dark);
+        margin-top: 64px;
+        padding-top: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .footer-fine-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .footer-fine-brand img {
+        width: 28px;
+        height: 28px;
+    }
+    .footer-fine-brand span,
+    .footer-fine a {
+        font-size: 13px;
+        color: var(--uc-plum-muted);
+    }
+    @media (max-width: 1023px) {
+        h2 {
+            font-size: 36px;
+        }
+    }
+    @media (max-width: 767px) {
+        h2 {
+            font-size: 30px;
+        }
+    }
+</style>

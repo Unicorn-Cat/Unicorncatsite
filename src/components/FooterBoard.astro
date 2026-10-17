@@ -1,0 +1,93 @@
+---
+type Props = {
+  /** Which nav links to show — the blog index omits "Blog", the post page includes it */
+  page: "blog" | "post";
+};
+
+const { page } = Astro.props;
+---
+
+<div class="footer-board">
+  <div class="container-board">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="logo-new.png" alt="" />
+        <span>Unicorncat Consulting</span>
+      </div>
+      <div class="footer-links">
+        <a href="" class="navlink">Home</a>
+        {
+          page === "post" && (
+            <a href="blog" class="navlink">
+              Blog
+            </a>
+          )
+        }
+        <a href="about" class="navlink">About us</a>
+        {
+          page === "blog" && (
+            <a href="https://www.linkedin.com/company/unicorncat-consulting" class="navlink">
+              LinkedIn
+            </a>
+          )
+        }
+      </div>
+    </div>
+    <div class="footer-fine">
+      <span>The Workbench · a working blog · running since 2026</span>
+      <a href="mailto:alex@unicorncatconsulting.com">alex@unicorncatconsulting.com</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .footer-board {
+    background: var(--uc-ink-plum);
+  }
+  .footer-board .container-board {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .footer-brand img {
+    width: 32px;
+    height: 32px;
+  }
+  .footer-brand span {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 16px;
+    color: #fff;
+  }
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  .footer-fine {
+    border-top: 1px solid var(--rule-on-dark);
+    margin-top: 36px;
+    padding-top: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-fine span,
+  .footer-fine a {
+    font-size: 11px;
+    color: var(--uc-plum-muted);
+  }
+</style>

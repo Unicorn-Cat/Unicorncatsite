@@ -1,0 +1,312 @@
+---
+import Base from "../layouts/base.astro";
+import Nav from "../components/Nav.astro";
+import FooterPolished from "../components/FooterPolished.astro";
+import ImageSlot from "../components/ImageSlot.astro";
+
+const team = [
+  {
+    name: "Alex Gunter",
+    role: "CEO",
+    photoLabel: "Photo of Alex Gunter",
+    photo: undefined,
+    bio: "Alex leads the training and process side — the work of getting AI out of the demo and into the daily habits of a real team. He runs the on-site workshops and the adoption engagements.",
+  },
+  {
+    name: "Dylan Paulus",
+    role: "CTO",
+    photoLabel: "Photo of Dylan Paulus",
+    photo: "team-dylan.jpeg",
+    bio: "Dylan builds the software — the connectors, internal tools, and automations that turn a stuck process into a solved one. If a vendor says it can't be done, this is the desk it lands on.",
+  },
+];
+
+const how = [
+  {
+    num: "01",
+    title: "We watch the work first",
+    body: "Before we recommend anything, we sit with your team and map where the hours actually go. Most of the value is found here, not in a tool.",
+  },
+  {
+    num: "02",
+    title: "We build the smallest thing that works",
+    body: "No platform projects, no year-long roadmaps. The two-week tool that pays for itself beats the six-figure system that never ships.",
+  },
+  {
+    num: "03",
+    title: "We leave you able to run it",
+    body: "Every engagement ends with your team trained and a plain-English runbook. Success is you not needing to call us again.",
+  },
+];
+---
+
+<Base title="About us — Unicorncat Consulting">
+  <!-- Nav + hero -->
+  <div class="hero">
+    <Nav active="about" />
+    <div class="hero-band">
+      <div class="container hero-inner">
+        <div class="eyebrow eyebrow--dark hero-eyebrow">ABOUT US</div>
+        <h1>Meaningful work. Not bullshit.</h1>
+        <p class="hero-lead">
+          We started Unicorncat because most technology consulting is theater — decks, frameworks,
+          and invoices with nothing running at the end. We do the opposite.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- What we believe -->
+  <div class="container believe-grid">
+    <div class="eyebrow believe-eyebrow">WHAT WE BELIEVE</div>
+    <div>
+      <p class="believe-lead">
+        Technology should make work more human, not less. The point of automating the busywork is to
+        give people back the time to do the work that actually matters.
+      </p>
+      <p class="believe-body">
+        We help small and mid-sized companies adopt AI the honest way: find the two or three places
+        it genuinely helps, roll it out so it sticks, and train your team to keep going without us.
+        When a tool doesn't exist, we build it. When AI is the wrong answer, we say so.
+      </p>
+      <p class="believe-body last">
+        No account managers. No junior team learning on your budget. When you hire Unicorncat, you
+        work directly with the two people who founded it.
+      </p>
+    </div>
+  </div>
+
+  <!-- The team -->
+  <div class="bordered-section">
+    <div class="container section">
+      <div class="eyebrow team-eyebrow">THE TEAM</div>
+      <div class="team-grid">
+        {
+          team.map((member) => (
+            <div>
+              <div class="team-photo">
+                <ImageSlot
+                  src={member.photo}
+                  alt={member.photo ? member.name : ""}
+                  label={member.photoLabel}
+                  radius={8}
+                />
+              </div>
+              <h3>{member.name}</h3>
+              <div class="team-role">{member.role}</div>
+              <p class="team-bio">{member.bio}</p>
+              <p class="team-placeholder">placeholder bio — send us the real one</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- How we work -->
+  <div class="bordered-section">
+    <div class="container section">
+      <div class="eyebrow how-eyebrow">HOW WE WORK</div>
+      <div class="how-rows">
+        {
+          how.map((item, i) => (
+            <div class:list={["how-row", i === how.length - 1 && "last"]}>
+              <span class="how-num">{item.num}</span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <FooterPolished />
+</Base>
+
+<style>
+  .hero {
+    background: var(--uc-hero-gradient);
+  }
+  .hero-band {
+    border-top: 1px solid var(--rule-on-dark);
+  }
+  .hero-inner {
+    padding-top: 88px;
+    padding-bottom: 80px;
+  }
+  .hero-eyebrow {
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 56px;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    color: #fff;
+    margin: 0;
+    max-width: 860px;
+  }
+  .hero-lead {
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--uc-lavender);
+    max-width: 620px;
+    margin: 28px 0 0 0;
+  }
+
+  .believe-grid {
+    padding-top: var(--section-pad);
+    padding-bottom: var(--section-pad);
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .believe-eyebrow {
+    padding-top: 6px;
+  }
+  .believe-lead {
+    font-size: 22px;
+    line-height: 1.6;
+    color: var(--uc-text);
+    margin: 0 0 24px 0;
+    font-weight: 500;
+  }
+  .believe-body {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--uc-text-2);
+    margin: 0 0 20px 0;
+  }
+  .believe-body.last {
+    margin-bottom: 0;
+  }
+
+  .bordered-section {
+    border-top: 1px solid var(--uc-border);
+  }
+  .section {
+    padding-top: var(--section-pad);
+    padding-bottom: var(--section-pad);
+  }
+
+  .team-eyebrow {
+    margin-bottom: 48px;
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+  }
+  .team-photo {
+    width: 100%;
+    height: 400px;
+    margin-bottom: 28px;
+  }
+  .team-grid h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    color: var(--uc-text);
+    margin: 0 0 4px 0;
+  }
+  .team-role {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--uc-text-3);
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+  .team-bio {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--uc-text-2);
+    margin: 0 0 16px 0;
+  }
+  .team-placeholder {
+    font-size: 13px;
+    color: var(--uc-text-4);
+    border: 1px dashed var(--uc-border-strong);
+    padding: 8px 12px;
+    border-radius: 3px;
+    margin: 0;
+    display: inline-block;
+  }
+
+  .how-eyebrow {
+    margin-bottom: 16px;
+  }
+  .how-rows {
+    display: flex;
+    flex-direction: column;
+  }
+  .how-row {
+    display: grid;
+    grid-template-columns: 80px 300px 1fr;
+    gap: 32px;
+    padding: 36px 0;
+    border-top: 1px solid var(--uc-border);
+    align-items: baseline;
+  }
+  .how-row.last {
+    border-bottom: 1px solid var(--uc-border);
+  }
+  .how-num {
+    font-size: 15px;
+    color: var(--uc-text-4);
+  }
+  .how-row h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--uc-text);
+    margin: 0;
+    letter-spacing: -0.015em;
+  }
+  .how-row p {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--uc-text-2);
+    margin: 0;
+  }
+
+  @media (max-width: 1023px) {
+    h1 {
+      font-size: 40px;
+    }
+    .believe-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    /* The 6px nudge only exists to optically align the eyebrow with the first
+       line of body text side by side — pointless once stacked. */
+    .believe-eyebrow {
+      padding-top: 0;
+    }
+    .team-grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .team-photo {
+      height: 320px;
+    }
+  }
+  @media (max-width: 767px) {
+    h1 {
+      font-size: 32px;
+    }
+    .believe-lead {
+      font-size: 19px;
+    }
+    .how-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .team-photo {
+      height: 260px;
+    }
+  }
+</style>

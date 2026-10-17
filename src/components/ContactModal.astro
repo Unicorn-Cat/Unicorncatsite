@@ -1,0 +1,297 @@
+---
+/**
+ * Shared contact modal. Rendered once per page (from the base layout); opened by
+ * any `.contact-trigger` button. Validation, honeypot, and arithmetic check per
+ * the design spec.
+ *
+ * Delivery: there is no form endpoint, so a valid submission hands the message
+ * to the visitor's mail client via `mailto:` — nothing can be silently dropped.
+ * Set CONTACT_ENDPOINT in the script below to switch to a real POST; the
+ * submitting and failure states are already wired for it.
+ */
+---
+
+<div class="cm-overlay" id="contact-modal" hidden>
+    <div class="cm-card" role="dialog" aria-modal="true" aria-labelledby="cm-title">
+        <div class="cm-form-wrap" data-view="form">
+            <div class="cm-head">
+                <div>
+                    <div class="cm-eyebrow">CONTACT US</div>
+                    <h2 class="cm-title" id="cm-title">Tell us what's slowing you down.</h2>
+                </div>
+                <button type="button" class="cm-close" aria-label="Close">×</button>
+            </div>
+
+            <form novalidate>
+                <div class="cm-fields">
+                    <div class="cm-row">
+                        <label class="cm-field">
+                            <span class="cm-label">Name</span>
+                            <input class="cm-input" name="name" type="text" placeholder="Your name" />
+                        </label>
+                        <label class="cm-field">
+                            <span class="cm-label">Company</span>
+                            <input
+                                class="cm-input"
+                                name="company"
+                                type="text"
+                                placeholder="Company name"
+                            />
+                        </label>
+                    </div>
+                    <div class="cm-row">
+                        <label class="cm-field">
+                            <span class="cm-label">Email</span>
+                            <input
+                                class="cm-input"
+                                name="email"
+                                type="email"
+                                placeholder="you@company.com"
+                            />
+                        </label>
+                        <label class="cm-field">
+                            <span class="cm-label">Phone</span>
+                            <input class="cm-input" name="phone" type="tel" placeholder="Optional" />
+                        </label>
+                    </div>
+                    <label class="cm-field">
+                        <span class="cm-label">What are you after?</span>
+                        <textarea
+                            class="cm-input cm-input--textarea"
+                            name="desc"
+                            rows="4"
+                            placeholder="A sentence or two on what you're trying to solve."></textarea>
+                    </label>
+
+                    <div class="cm-honeypot" aria-hidden="true">
+                        <label
+                            >Do not fill this field<input
+                                name="honey"
+                                type="text"
+                                tabindex="-1"
+                                autocomplete="off"
+                            /></label
+                        >
+                    </div>
+
+                    <label class="cm-field">
+                        <span class="cm-label"
+                            >Quick check — what is <span data-challenge>A + B</span>?</span
+                        >
+                        <input
+                            class="cm-input cm-input--answer"
+                            name="answer"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Answer"
+                        />
+                    </label>
+
+                    <div class="cm-error" role="alert" hidden></div>
+
+                    <button type="submit" class="cm-submit">Send message</button>
+                    <p class="cm-fine">
+                        Goes straight to Alex and Dylan. No forms, no funnels, no sales sequence.
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <div class="cm-success" data-view="success" hidden>
+            <div class="cm-eyebrow" data-success-eyebrow>MESSAGE SENT</div>
+            <h2 class="cm-title" data-success-title>Thanks — we'll be in touch.</h2>
+            <p class="cm-success-body" data-success-body>
+                Your message is on its way to Alex and Dylan. Expect a reply within one business day.
+            </p>
+            <button type="button" class="cm-success-close">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set this to a Formspree / Web3Forms / own-route URL to POST instead of
+    // handing off to the visitor's mail client. Empty = mailto handoff.
+    const CONTACT_ENDPOINT = "";
+    const CONTACT_ADDRESS = "alex@unicorncatconsulting.com";
+
+    const overlay = document.getElementById("contact-modal")!;
+    const card = overlay.querySelector<HTMLElement>(".cm-card")!;
+    const formView = overlay.querySelector<HTMLElement>("[data-view='form']")!;
+    const successView = overlay.querySelector<HTMLElement>("[data-view='success']")!;
+    const form = overlay.querySelector<HTMLFormElement>("form")!;
+    const errorBox = overlay.querySelector<HTMLElement>(".cm-error")!;
+    const challengeEl = overlay.querySelector<HTMLElement>("[data-challenge]")!;
+    const submitBtn = overlay.querySelector<HTMLButtonElement>(".cm-submit")!;
+    const successEyebrow = overlay.querySelector<HTMLElement>("[data-success-eyebrow]")!;
+    const successTitle = overlay.querySelector<HTMLElement>("[data-success-title]")!;
+    const successBody = overlay.querySelector<HTMLElement>("[data-success-body]")!;
+
+    let a = 0;
+    let b = 0;
+    let lastTrigger: HTMLElement | null = null;
+
+    function field(name: string) {
+        return form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement;
+    }
+
+    /** Inputs go read-only while a POST is in flight, per the spec. */
+    function setReadOnly(on: boolean) {
+        for (const el of [...form.elements] as HTMLInputElement[]) {
+            if (el.type !== "submit") el.readOnly = on;
+        }
+    }
+
+    function showError(message: string) {
+        errorBox.textContent = message;
+        errorBox.hidden = false;
+    }
+
+    /**
+     * `handedOff` means the message went to the visitor's mail client rather
+     * than over the wire, so the copy has to say so — they still have to press
+     * send. The honeypot path shows the plain success state and sends nothing.
+     */
+    function showSuccess(handedOff = false) {
+        if (handedOff) {
+            successEyebrow.textContent = "MESSAGE READY";
+            successTitle.textContent = "Your email app should be open.";
+            successBody.textContent =
+                `We put the message together and addressed it to Alex and Dylan. Send it and ` +
+                `you'll hear back within one business day. If nothing opened, write to ` +
+                `${CONTACT_ADDRESS} directly.`;
+        } else {
+            successEyebrow.textContent = "MESSAGE SENT";
+            successTitle.textContent = "Thanks — we'll be in touch.";
+            successBody.textContent =
+                "Your message is on its way to Alex and Dylan. Expect a reply within one business day.";
+        }
+        formView.hidden = true;
+        successView.hidden = false;
+        successView.querySelector<HTMLButtonElement>(".cm-success-close")?.focus();
+    }
+
+    function open(trigger: HTMLElement) {
+        lastTrigger = trigger;
+        // Reset state on every open: fresh sum, cleared error, form view
+        a = 2 + Math.floor(Math.random() * 6);
+        b = 2 + Math.floor(Math.random() * 6);
+        challengeEl.textContent = `${a} + ${b}`;
+        form.reset();
+        errorBox.hidden = true;
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send message";
+        formView.hidden = false;
+        successView.hidden = true;
+        overlay.hidden = false;
+        document.body.style.overflow = "hidden";
+        field("name").focus();
+    }
+
+    function close() {
+        overlay.hidden = true;
+        document.body.style.overflow = "";
+        lastTrigger?.focus();
+    }
+
+    document.addEventListener("click", (e) => {
+        const trigger = (e.target as HTMLElement).closest(".contact-trigger");
+        if (trigger) open(trigger as HTMLElement);
+    });
+
+    overlay.addEventListener("click", (e) => {
+        if (!card.contains(e.target as Node)) close();
+    });
+    overlay.querySelector(".cm-close")?.addEventListener("click", close);
+    overlay.querySelector(".cm-success-close")?.addEventListener("click", close);
+
+    document.addEventListener("keydown", (e) => {
+        if (overlay.hidden) return;
+        if (e.key === "Escape") {
+            close();
+            return;
+        }
+        // Focus trap
+        if (e.key === "Tab") {
+            const focusables = [
+                ...card.querySelectorAll<HTMLElement>("a[href], button, input, textarea, select"),
+            ].filter((el) => !el.hidden && el.tabIndex !== -1 && el.offsetParent !== null);
+            if (focusables.length === 0) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        }
+    });
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errorBox.hidden = true;
+
+        const name = field("name").value.trim();
+        const email = field("email").value.trim();
+        const desc = field("desc").value.trim();
+
+        // Bots fill the honeypot: silently show success without sending
+        if (field("honey").value.trim() !== "") {
+            showSuccess();
+            return;
+        }
+        if (!name || !email || !desc) {
+            showError("Add your name, email, and a short description.");
+            return;
+        }
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+            showError("That email doesn't look right. Check and try again.");
+            return;
+        }
+        if (parseInt(field("answer").value, 10) !== a + b) {
+            showError("The quick check didn't match. Try the sum again.");
+            return;
+        }
+
+        const company = field("company").value.trim();
+        const phone = field("phone").value.trim();
+
+        if (!CONTACT_ENDPOINT) {
+            // No endpoint: compose the message and hand it to the mail client.
+            const details = [
+                `Name: ${name}`,
+                company ? `Company: ${company}` : null,
+                `Email: ${email}`,
+                phone ? `Phone: ${phone}` : null,
+            ].filter(Boolean);
+            const body = `${details.join("\n")}\n\n${desc}\n`;
+            const href =
+                `mailto:${CONTACT_ADDRESS}` +
+                `?subject=${encodeURIComponent(`Enquiry from ${name}`)}` +
+                `&body=${encodeURIComponent(body)}`;
+            window.location.href = href;
+            showSuccess(true);
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending…";
+        setReadOnly(true);
+        try {
+            const res = await fetch(CONTACT_ENDPOINT, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", Accept: "application/json" },
+                body: JSON.stringify({ name, company, email, phone, message: desc }),
+            });
+            if (!res.ok) throw new Error(String(res.status));
+            showSuccess();
+        } catch {
+            showError(`Couldn't send that. Email ${CONTACT_ADDRESS} and we'll pick it up.`);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Send message";
+            setReadOnly(false);
+        }
+    });
+</script>

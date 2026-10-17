@@ -1,38 +1,430 @@
 ---
-import BaseLayout from "../layouts/base.astro";
+import { getCollection } from "astro:content";
+import Base from "../layouts/base.astro";
+import Nav from "../components/Nav.astro";
+import ContactTrigger from "../components/ContactTrigger.astro";
+import FooterPolished from "../components/FooterPolished.astro";
+import ImageSlot from "../components/ImageSlot.astro";
+import { formatMonthYear, sortByDateDesc, visiblePosts } from "../lib/blog";
+
+const posts = sortByDateDesc(visiblePosts(await getCollection("blog")));
+const blogCards = posts.filter((p) => !p.data.pinned).slice(0, 3);
+
+const services = [
+    {
+        num: "01",
+        title: "AI adoption",
+        body: "An audit of where your hours actually go, then a rollout plan for the two or three places AI pays for itself. We stay until it's running.",
+    },
+    {
+        num: "02",
+        title: "Team training",
+        body: "On-site intensives built around your work, not generic prompts. Your team leaves with tools they built themselves and the habits to keep going.",
+    },
+    {
+        num: "03",
+        title: "Custom software",
+        body: "The connector, the internal tool, the automation your vendors say is impossible. Scoped small, shipped fast, documented so anyone can run it.",
+    },
+];
 ---
 
-<BaseLayout>
-    <div
-        class="flex justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto mt-12 pt-20 pb-12 relative border-t-2 border-[#523879]"
-        slot="header-content">
-        <div class="animate-fadeIn">
-            <h2
-                class="text-3xl md:text-6xl font-bold text-white font-serif leading-tight tracking-tight max-w-2xl mb-6">
-                Start your digital transformation today
-            </h2>
-
-            <div class="text-lg max-w-lg text-[#c4a3ec]">
-                We use emerging tech to redesign business processes, significantly reduce costs,
-                improve quality, and efficiency.
+<Base title="Unicorncat Consulting — AI that your team actually uses">
+    <!-- Dark hero -->
+    <div class="hero">
+        <Nav />
+        <div class="hero-band">
+            <div class="container hero-grid">
+                <div>
+                    <h1>AI is only useful when your team can actually use it.</h1>
+                    <p class="hero-lead">
+                        We work inside small and mid-sized companies — training people, fixing
+                        processes, and building software — until AI is part of how you operate, not
+                        a tool nobody opens.
+                    </p>
+                    <ContactTrigger variant="violet" label="Book a call" />
+                </div>
+                <div class="hero-media">
+                    <ImageSlot label="Hero photo — a real workshop or working session" radius={6} />
+                </div>
+            </div>
+            <div class="stat-band">
+                <div class="container stat-grid">
+                    <div>
+                        <div class="stat-fig">120+</div>
+                        <div class="stat-cap">people trained hands-on</div>
+                    </div>
+                    <div>
+                        <div class="stat-fig">30+</div>
+                        <div class="stat-cap">processes automated</div>
+                    </div>
+                    <div>
+                        <div class="stat-fig">2</div>
+                        <div class="stat-cap">consultants, zero hand-offs</div>
+                    </div>
+                    <span class="sample-tag sample-tag--dark">sample stats</span>
+                </div>
             </div>
         </div>
     </div>
-    <div class="lg:mt-24" slot="content">
-        <div
-            class="content flex flex-col justify-between max-w-lg md:max-w-2xl lg:max-w-6xl mx-auto">
-            <h3
-                class="font-sans text-4xl font-bold text-slate-800 leading-tight tracking-tight font-serif">
-                Empowering Your Digital Future
-            </h3>
 
-            <p class="mt-2">
-                At Unicorncat Consulting, we're not just consultants; we're your partners in
-                reimagining the potential of your business in the digital age. Specializing in
-                digital transformation, software development, artificial intelligence, and
-                automation, we harness the power of technology to drive innovation, efficiency, and
-                growth.
-            </p>
+    <!-- Trusted by -->
+    <div class="trusted">
+        <div class="container trusted-row">
+            <span class="trusted-label">TRUSTED BY</span>
+            <div class="trusted-names">
+                <span>Northline Freight</span>
+                <span>Cedar &amp; Main</span>
+                <span>Halvorsen Group</span>
+                <span>Bright Harbor Health</span>
+                <span class="sample-tag">sample names — replace</span>
+            </div>
         </div>
     </div>
-</BaseLayout>
+
+    <!-- What we do -->
+    <div class="container section">
+        <div class="eyebrow section-eyebrow">WHAT WE DO</div>
+        <div class="service-rows">
+            {
+                services.map((s, i) => (
+                    <div class:list={["uc-row", "service-row", i === services.length - 1 && "last"]}>
+                        <span class="service-num">{s.num}</span>
+                        <h3>{s.title}</h3>
+                        <p>{s.body}</p>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+
+    <!-- Image break -->
+    <div class="container image-break">
+        <div class="image-break-slot">
+            <ImageSlot
+                label="Wide photo — your team at work, a whiteboard session, a client site"
+                radius={6}
+            />
+        </div>
+    </div>
+
+    <!-- From the blog -->
+    <div class="container section-bottom">
+        <div class="section-head">
+            <div class="eyebrow">FROM THE BLOG</div>
+            <a href="blog" class="all-posts">All posts →</a>
+        </div>
+        <div class="blog-cards">
+            {
+                blogCards.map((post) => (
+                    <a
+                        href={`blog/${post.slug}`}
+                        aria-label={post.data.title}
+                        class="uc-card blog-card"
+                    >
+                        <div class="blog-card-media">
+                            <ImageSlot label="Post image" />
+                        </div>
+                        <div class="blog-card-body">
+                            <div class="blog-card-meta">
+                                {formatMonthYear(post.data.date)} · {post.data.category.toUpperCase()}
+                            </div>
+                            <h4>{post.data.title}</h4>
+                        </div>
+                    </a>
+                ))
+            }
+        </div>
+    </div>
+
+    <!-- Who we are -->
+    <div class="who">
+        <div class="container who-grid">
+            <div>
+                <div class="eyebrow who-eyebrow">WHO WE ARE</div>
+                <h2>Two consultants. No account managers, no bench.</h2>
+            </div>
+            <div>
+                <p>
+                    Unicorncat is Alex Gunter and Dylan Paulus. When you hire us, you work with us —
+                    the people who scope the problem are the people who solve it. No junior teams,
+                    no hand-offs, no learning on your dime.
+                </p>
+                <a href="about" class="meet-link">Meet the team →</a>
+            </div>
+        </div>
+    </div>
+
+    <FooterPolished />
+</Base>
+
+<style>
+    .hero {
+        background: var(--uc-hero-gradient);
+    }
+    .hero-band {
+        border-top: 1px solid var(--rule-on-dark);
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 64px;
+        padding-top: 96px;
+        padding-bottom: 88px;
+        align-items: center;
+    }
+    h1 {
+        font-family: var(--font-display);
+        font-weight: 900;
+        font-size: 62px;
+        line-height: 1.04;
+        letter-spacing: -0.035em;
+        color: #fff;
+        margin: 0;
+    }
+    .hero-lead {
+        font-size: 19px;
+        line-height: 1.6;
+        color: var(--uc-lavender);
+        max-width: 520px;
+        margin: 32px 0 40px 0;
+    }
+    .hero-media {
+        width: 420px;
+        height: 420px;
+    }
+    .stat-band {
+        border-top: 1px solid var(--rule-on-dark);
+    }
+    .stat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr auto;
+        align-items: center;
+        padding-top: 36px;
+        padding-bottom: 36px;
+        gap: 48px;
+    }
+    .stat-fig {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 34px;
+        color: #fff;
+        letter-spacing: -0.02em;
+    }
+    .stat-cap {
+        font-size: 14px;
+        color: var(--uc-lavender-dim);
+    }
+
+    .trusted {
+        border-bottom: 1px solid var(--uc-border);
+    }
+    .trusted-row {
+        padding-top: 28px;
+        padding-bottom: 28px;
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+    .trusted-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--uc-text-3);
+        letter-spacing: 0.1em;
+        flex: none;
+    }
+    .trusted-names {
+        display: flex;
+        gap: 36px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .trusted-names > span:not(.sample-tag) {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--uc-logo-grey);
+    }
+
+    .section {
+        padding-top: var(--section-pad);
+        padding-bottom: var(--section-pad);
+    }
+    .section-bottom {
+        padding-bottom: var(--section-pad);
+    }
+    .section-eyebrow {
+        margin-bottom: 16px;
+    }
+    .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 32px;
+    }
+
+    .service-rows {
+        display: flex;
+        flex-direction: column;
+    }
+    .service-row {
+        display: grid;
+        grid-template-columns: 80px 300px 1fr;
+        gap: 32px;
+        padding: 36px 16px;
+        border-top: 1px solid var(--uc-border);
+        align-items: baseline;
+        margin: 0 -16px;
+    }
+    .service-row.last {
+        border-bottom: 1px solid var(--uc-border);
+    }
+    .service-num {
+        font-size: 15px;
+        color: var(--uc-text-4);
+    }
+    .service-row h3 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 26px;
+        color: var(--uc-text);
+        margin: 0;
+        letter-spacing: -0.015em;
+    }
+    .service-row p {
+        font-size: 16px;
+        line-height: 1.65;
+        color: var(--uc-text-2);
+        margin: 0;
+    }
+
+    .image-break {
+        padding-bottom: var(--section-pad);
+    }
+    .image-break-slot {
+        width: 100%;
+        height: 340px;
+    }
+
+    .all-posts {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--uc-violet);
+    }
+    .blog-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 24px;
+    }
+    .blog-card {
+        border: 1px solid var(--uc-border);
+        border-radius: 8px;
+        overflow: hidden;
+        display: block;
+    }
+    .blog-card-media {
+        width: 100%;
+        height: 160px;
+    }
+    .blog-card-body {
+        padding: 24px;
+    }
+    .blog-card-meta {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--uc-text-3);
+        letter-spacing: 0.06em;
+        margin-bottom: 12px;
+    }
+    .blog-card h4 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 19px;
+        line-height: 1.3;
+        color: var(--uc-text);
+        margin: 0;
+        letter-spacing: -0.01em;
+    }
+
+    .who {
+        border-top: 1px solid var(--uc-border);
+    }
+    .who-grid {
+        padding-top: var(--section-pad);
+        padding-bottom: var(--section-pad);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: start;
+    }
+    .who-eyebrow {
+        margin-bottom: 24px;
+    }
+    .who h2 {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 38px;
+        line-height: 1.12;
+        letter-spacing: -0.025em;
+        color: var(--uc-text);
+        margin: 0;
+    }
+    .who p {
+        font-size: 17px;
+        line-height: 1.65;
+        color: var(--uc-text-strong);
+        margin: 0 0 24px 0;
+    }
+    .meet-link {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--uc-violet);
+    }
+
+    @media (max-width: 1023px) {
+        h1 {
+            font-size: 44px;
+        }
+        .who h2 {
+            font-size: 30px;
+        }
+        .hero-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+            padding-top: var(--section-pad);
+            padding-bottom: var(--section-pad);
+        }
+        .hero-media {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1 / 1;
+        }
+        .blog-cards {
+            grid-template-columns: 1fr;
+        }
+        .who-grid {
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+    }
+    @media (max-width: 767px) {
+        h1 {
+            font-size: 34px;
+        }
+        .who h2 {
+            font-size: 26px;
+        }
+        .service-row {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        .stat-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        .image-break-slot {
+            height: 220px;
+        }
+    }
+</style>

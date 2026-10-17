@@ -1,0 +1,52 @@
+---
+import ContactTrigger from "./ContactTrigger.astro";
+
+type Props = {
+    active?: "blog" | "about" | null;
+};
+
+const { active = null } = Astro.props;
+// Always the 1200px container, board pages included, so the logo and links
+// sit at the same position when moving between the site and the blog.
+const containerClass = "container";
+---
+
+<div class={containerClass}>
+    <div class="nav-bar">
+        <a href="" class="nav-brand">
+            <img src="logo-new.png" alt="Unicorncat Consulting" />
+            <span class="nav-wordmark">Unicorncat Consulting</span>
+        </a>
+        <nav class="nav-links" aria-label="Main">
+            <a href="blog" class:list={["navlink", active === "blog" && "navlink-active"]}>Blog</a>
+            <a href="about" class:list={["navlink", active === "about" && "navlink-active"]}
+                >About us</a
+            >
+            <ContactTrigger variant="navlink" label="Contact us" />
+        </nav>
+        <button type="button" class="nav-menu-btn" aria-expanded="false" aria-controls="nav-drawer"
+            >Menu</button
+        >
+    </div>
+</div>
+<div class="nav-drawer" id="nav-drawer" hidden>
+    <div class={containerClass}>
+        <div class="nav-drawer-inner">
+            <a href="blog" class:list={["navlink", active === "blog" && "navlink-active"]}>Blog</a>
+            <a href="about" class:list={["navlink", active === "about" && "navlink-active"]}
+                >About us</a
+            >
+            <ContactTrigger variant="navlink" label="Contact us" />
+        </div>
+    </div>
+</div>
+
+<script>
+    const btn = document.querySelector<HTMLButtonElement>(".nav-menu-btn");
+    const drawer = document.getElementById("nav-drawer");
+    btn?.addEventListener("click", () => {
+        const open = drawer!.hidden;
+        drawer!.hidden = !open;
+        btn.setAttribute("aria-expanded", String(open));
+    });
+</script>

@@ -1,0 +1,401 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/base.astro";
+import Nav from "../../components/Nav.astro";
+import ContactTrigger from "../../components/ContactTrigger.astro";
+import FooterBoard from "../../components/FooterBoard.astro";
+import BoardRow from "../../components/BoardRow.astro";
+import ImageSlot from "../../components/ImageSlot.astro";
+import {
+    AUTHORS,
+    formatDate,
+    formatViews,
+    readingTime,
+    sortByDateDesc,
+    visiblePosts,
+} from "../../lib/blog";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("blog");
+    return posts
+        .filter((p) => !p.data.draft || !import.meta.env.PROD)
+        .map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const {
+    title,
+    author,
+    authorRole,
+    category,
+    categoryLabel,
+    date,
+    views,
+    coverImage,
+    signoff,
+    ctaHeading,
+    ctaBody,
+} = post.data;
+
+const authorInfo = AUTHORS[author];
+const dateStr = formatDate(date);
+const mins = readingTime(post.body);
+
+const all = visiblePosts(await getCollection("blog"));
+const authorPostCount = all.filter((p) => p.data.author === author).length;
+const more = sortByDateDesc(all.filter((p) => !p.data.pinned && p.slug !== post.slug)).slice(0, 3);
+
+const headerLabel =
+    categoryLabel ?? category.charAt(0).toUpperCase() + category.slice(1);
+---
+
+<Base title={`${title} — Unicorncat Consulting`} board>
+    <!-- Brand nav + dark masthead -->
+    <div class="masthead">
+        <Nav active="blog" />
+        <div class="masthead-band">
+            <div class="container-board masthead-inner">
+                <div class="crumb">
+                    <a href="">unicorncat</a><span class="crumb-sep"> » </span><a href="blog"
+                        >the workbench</a
+                    ><span class="crumb-sep"> » </span>{category}
+                </div>
+                <h1>{title}</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thread board -->
+    <div class="container-board thread-wrap">
+        <div class="thread-toolbar">
+            <a href="blog" class="bevel-btn back-btn">« Back to posts</a>
+            <span class="meta">viewing 1 post</span>
+        </div>
+
+        <div class="board-panel">
+            <div class="board-head">
+                <span>{headerLabel}</span>
+                <span class="board-head-sub posted-sub">posted {dateStr}</span>
+            </div>
+
+            <div class="thread">
+                <!-- Poster column -->
+                <div class="poster">
+                    <div class={`poster-avatar ${authorInfo.avatarClass}`}>
+                        {authorInfo.initials}
+                    </div>
+                    <div class="poster-name">{authorInfo.name}</div>
+                    <div class="chip chip--cat poster-chip">{authorRole}</div>
+                    <div class="poster-stats">
+                        <div class="poster-stat">
+                            <span>Posts</span><span class="stat-val">{authorPostCount}</span>
+                        </div>
+                        <div class="poster-stat">
+                            <span>Joined</span><span class="stat-val">{authorInfo.joined}</span>
+                        </div>
+                        <div class="poster-stat">
+                            <span>Writes</span><span class="stat-val">{authorInfo.writes}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post body -->
+                <div class="post-body">
+                    <div class="meta post-meta">
+                        <span class="pm-strong">{dateStr} · {mins} min read</span>
+                        <span class="pm-dot">·</span>
+                        <span class="pm-strong">#1</span>
+                        {
+                            views != null && (
+                                <>
+                                    <span class="pm-dot">·</span>
+                                    <span class="pm-strong">{formatViews(views)}</span>
+                                </>
+                            )
+                        }
+                    </div>
+
+                    <div class="post-cover">
+                        <ImageSlot
+                            label="Cover image for this post"
+                            src={coverImage}
+                            alt=""
+                            board
+                        />
+                    </div>
+
+                    <div class="prose">
+                        <Content />
+                    </div>
+
+                    {signoff && <div class="signoff">{signoff}</div>}
+                </div>
+            </div>
+        </div>
+
+        <!-- Reply / contact bar -->
+        {
+            ctaHeading && (
+                <div class="reply-bar">
+                    <div>
+                        <div class="reply-heading">{ctaHeading}</div>
+                        {ctaBody && <div class="reply-body">{ctaBody}</div>}
+                    </div>
+                    <ContactTrigger variant="violet" label="Contact us" />
+                </div>
+            )
+        }
+    </div>
+
+    <!-- More from the board -->
+    <div class="container-board more-wrap">
+        <div class="board-panel">
+            <div class="board-head">More from the board</div>
+            {more.map((p, i) => <BoardRow post={p} alt={i % 2 === 1} showViews={false} compact />)}
+        </div>
+    </div>
+
+    <FooterBoard page="post" />
+</Base>
+
+<style>
+    .masthead {
+        background: var(--uc-hero-gradient);
+    }
+    .masthead-band {
+        border-top: 1px solid var(--rule-on-dark);
+    }
+    .masthead-inner {
+        padding-top: 26px;
+        padding-bottom: 34px;
+    }
+    .crumb {
+        font-family: var(--font-body);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: var(--uc-lavender-faint);
+        margin-bottom: 20px;
+    }
+    .crumb a {
+        color: var(--uc-lavender-faint);
+    }
+    .crumb-sep {
+        color: #6d5590;
+    }
+    h1 {
+        font-family: var(--font-display);
+        font-weight: 900;
+        font-size: 40px;
+        line-height: 1.06;
+        letter-spacing: -0.03em;
+        color: #fff;
+        margin: 0;
+        max-width: 800px;
+    }
+
+    .thread-wrap {
+        padding-top: 28px;
+        padding-bottom: 40px;
+    }
+    .thread-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+    }
+    .back-btn {
+        padding: 8px 15px;
+    }
+    .posted-sub {
+        font-weight: 600;
+    }
+
+    .thread {
+        display: grid;
+        grid-template-columns: 184px 1fr;
+        align-items: stretch;
+        background: var(--bd-row);
+    }
+    .poster {
+        background: var(--bd-poster);
+        border-right: 1px solid var(--bd-divider-poster);
+        padding: 22px 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .poster-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        box-shadow: var(--shadow-avatar);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 22px;
+        color: #fff;
+    }
+    .avatar--dylan {
+        background: var(--avatar-dylan);
+    }
+    .avatar--alex {
+        background: var(--avatar-alex);
+    }
+    .poster-name {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--bd-title-link);
+        margin-top: 12px;
+    }
+    .poster-chip {
+        font-size: 9.5px;
+        padding: 2px 8px;
+        margin: 8px 0 0 0;
+    }
+    .poster-stats {
+        width: 100%;
+        border-top: 1px solid var(--bd-divider-poster);
+        margin-top: 16px;
+        padding-top: 14px;
+        font-family: var(--font-body);
+        font-size: 11px;
+        color: var(--bd-label);
+        line-height: 2;
+        text-align: left;
+    }
+    .poster-stat {
+        display: flex;
+        justify-content: space-between;
+    }
+    .stat-val {
+        color: var(--bd-stat-value);
+        font-weight: 600;
+    }
+
+    .post-body {
+        padding: 24px 30px 30px 30px;
+        min-width: 0;
+    }
+    .post-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--bd-divider-prose);
+        margin-bottom: 22px;
+    }
+    .pm-strong {
+        color: var(--bd-text-3);
+    }
+    .pm-dot {
+        color: #c9bfa9;
+    }
+    .post-cover {
+        width: 100%;
+        height: 320px;
+        border: 1px solid var(--bd-divider-poster);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 26px;
+    }
+    .signoff {
+        margin-top: 28px;
+        padding-top: 16px;
+        border-top: 1px solid var(--bd-divider-prose);
+        font-family: var(--font-body);
+        font-size: 12px;
+        color: var(--bd-label);
+        font-style: italic;
+        line-height: 1.6;
+    }
+
+    .reply-bar {
+        margin-top: 14px;
+        border: 1px solid var(--bd-border);
+        border-radius: 3px;
+        overflow: hidden;
+        box-shadow: var(--shadow-board);
+        background: var(--bd-row);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .reply-heading {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 17px;
+        color: var(--bd-title-link);
+        margin-bottom: 4px;
+    }
+    .reply-body {
+        font-family: var(--font-body);
+        font-size: 13px;
+        color: var(--bd-text-2);
+    }
+
+    .more-wrap {
+        padding-bottom: 56px;
+    }
+
+    @media (max-width: 1023px) {
+        h1 {
+            font-size: 30px;
+        }
+        .thread {
+            grid-template-columns: 150px 1fr;
+        }
+        .post-cover {
+            height: 260px;
+        }
+    }
+    @media (max-width: 767px) {
+        h1 {
+            font-size: 26px;
+        }
+        .thread {
+            display: block;
+        }
+        .poster {
+            flex-direction: row;
+            align-items: center;
+            text-align: left;
+            gap: 12px;
+            border-right: none;
+            border-bottom: 1px solid var(--bd-divider-poster);
+            padding: 14px 18px;
+        }
+        .poster-avatar {
+            width: 40px;
+            height: 40px;
+            font-size: 15px;
+        }
+        .poster-name {
+            margin-top: 0;
+        }
+        .poster-chip {
+            margin: 0;
+        }
+        .poster-stats {
+            display: none;
+        }
+        .post-body {
+            padding: 20px 20px 24px 20px;
+        }
+        .post-cover {
+            height: 200px;
+        }
+        .reply-bar :global(.contact-trigger) {
+            width: 100%;
+        }
+    }
+</style>

@@ -1,0 +1,10 @@
+---
+type Props = {
+    variant?: "violet" | "white" | "navlink" | "dark" | "text";
+    label?: string;
+};
+
+const { variant = "violet", label = "Contact us" } = Astro.props;
+---
+
+<button type="button" class={`contact-trigger ct-${variant}`}>{label}</button>
